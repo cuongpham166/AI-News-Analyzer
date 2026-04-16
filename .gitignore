@@ -1,0 +1,9 @@
+.vscode
+venv
+.env
+
+#AI Module
+ai/models
+
+#Backend Module
+backend/.env

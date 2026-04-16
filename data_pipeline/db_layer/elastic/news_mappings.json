@@ -1,0 +1,22 @@
+{
+    "mappings": {
+        "properties": {
+            "@timestamp": {"type": "date"},
+            "sentiment_label": {"type": "keyword"},
+            "sentiment": {"type": "float"},
+            "topic": {"type": "keyword"},
+            "entities": {
+                "type": "nested",
+                "properties": {
+                    "value": {"type": "text"},
+                    "entity_type": {"type": "keyword"}
+                }
+            },
+            "summary": {"type": "text"},
+            "link": {"type": "keyword"},
+            "publish_date": {"type": "date", "format": "epoch_second"},
+            "title": {"type": "text"},
+            "source": {"type": "keyword"}
+        }
+    }
+}

@@ -1,9 +1,7 @@
 #GET _cluster/health
 
-{
-  "aggs": {
-    "sentiment_counts": {
-      "terms": {"field": "sentiment_label"}
-    }
-  }
-}
+GET news/_mapping
+
+GET /news/_search
+
+GET /news/_mapping/field/entities

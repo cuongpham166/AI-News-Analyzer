@@ -1,0 +1,261 @@
+{
+  "took": 8,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 349,
+      "relation": "eq"
+    },
+    "max_score": 1,
+    "hits": [
+      {
+        "_index": "news",
+        "_id": "https://news.un.org/feed/view/en/story/2026/02/1166904",
+        "_score": 1,
+        "_source": {
+          "sentiment_label": "negative",
+          "sentiment": -0.92,
+          "topic": "politics",
+          "entities": [],
+          "summary": " Sudan conflict has displaced 14 million people since April 2023 . Chad is Africa's largest refugee host per capita, according to the UN refugee agency .",
+          "link": "https://news.un.org/feed/view/en/story/2026/02/1166904",
+          "publish_date": 1770292800,
+          "title": "Chad: Africa’s refugee haven struggles with its own stark challenges",
+          "source": "UN",
+          "@timestamp": "2026-04-14T06:47:33.929522+00:00"
+        }
+      },
+      {
+        "_index": "news",
+        "_id": "https://news.un.org/feed/view/en/story/2026/02/1166922",
+        "_score": 1,
+        "_source": {
+          "sentiment_label": "negative",
+          "sentiment": -0.97,
+          "topic": "politics",
+          "entities": [
+            {
+              "value": "International Organization for Migration",
+              "entity_type": "organization"
+            }
+          ],
+          "summary": " The boat overturned in the Mediterranean Sea last Friday . The Libyan authorities rescued two Nigerian women . One said that her husband had drowned while the other reported that both her babies had died .",
+          "link": "https://news.un.org/feed/view/en/story/2026/02/1166922",
+          "publish_date": 1770638400,
+          "title": "53 migrants die in latest shipwreck tragedy off Libya coast",
+          "source": "UN",
+          "@timestamp": "2026-04-14T06:44:35.909377+00:00"
+        }
+      },
+      {
+        "_index": "news",
+        "_id": "https://news.un.org/feed/view/en/story/2026/02/1167018",
+        "_score": 1,
+        "_source": {
+          "sentiment_label": "negative",
+          "sentiment": -1,
+          "topic": "politics",
+          "entities": [
+            {
+              "value": "Tobruk",
+              "entity_type": "location"
+            },
+            {
+              "value": "Mariella Franco",
+              "entity_type": "person"
+            },
+            {
+              "value": "Anderson Gomes",
+              "entity_type": "person"
+            }
+          ],
+          "summary": " At least 13 civilians were killed and seven injured in Nangarhar province, including women and children . Additional strikes in Paktika province damaged buildings, including a madrassa and a residential property .",
+          "link": "https://news.un.org/feed/view/en/story/2026/02/1167018",
+          "publish_date": 1771848000,
+          "title": "World News in Brief: Civilian casualties in Afghanistan, migrant deaths off Crete, call for justice in Brazil trial",
+          "source": "UN",
+          "@timestamp": "2026-04-14T06:42:54.557582+00:00"
+        }
+      },
+      {
+        "_index": "news",
+        "_id": "https://news.un.org/feed/view/en/story/2026/02/1167048",
+        "_score": 1,
+        "_source": {
+          "sentiment_label": "negative",
+          "sentiment": -1,
+          "topic": "politics",
+          "entities": [],
+          "summary": " UN Spokesperson Stéphane Dujarric said any strike against civilians anywhere – or any civilian buildings or other infrastructure is “unacceptable and unjustifiable”",
+          "link": "https://news.un.org/feed/view/en/story/2026/02/1167048",
+          "publish_date": 1772107200,
+          "title": "World News in Brief: Russian strikes on Ukraine condemned, migrant deaths update, devastating floods in southern Brazil",
+          "source": "UN",
+          "@timestamp": "2026-04-14T06:39:55.285726+00:00"
+        }
+      },
+      {
+        "_index": "news",
+        "_id": "https://news.un.org/feed/view/en/story/2026/02/1167056",
+        "_score": 1,
+        "_source": {
+          "sentiment_label": "positive",
+          "sentiment": 0.99,
+          "topic": "politics",
+          "entities": [
+            {
+              "value": "António Guterres",
+              "entity_type": "person"
+            }
+          ],
+          "summary": " António Guterres presented his latest biennial report on the Global Compact for Safe, Orderly and Regular Migration to Member States .",
+          "link": "https://news.un.org/feed/view/en/story/2026/02/1167056",
+          "publish_date": 1772193600,
+          "title": "Guterres slams international failure to manage safe migration",
+          "source": "UN",
+          "@timestamp": "2026-04-14T06:38:23.696667+00:00"
+        }
+      },
+      {
+        "_index": "news",
+        "_id": "https://news.un.org/feed/view/en/story/2025/11/1166452",
+        "_score": 1,
+        "_source": {
+          "sentiment_label": "negative",
+          "sentiment": -1,
+          "topic": "technology",
+          "entities": [
+            {
+              "value": "UN Women",
+              "entity_type": "organization"
+            },
+            {
+              "value": "Sima Bahous",
+              "entity_type": "person"
+            }
+          ],
+          "summary": " The unwanted attention soon turned into explicit death threats . Ms. Tesfai told UN officials, Goodwill Ambassadors and civil society representatives in New York commemorating the International Day for the Elimination of Violence against Women .",
+          "link": "https://news.un.org/feed/view/en/story/2025/11/1166452",
+          "publish_date": 1764072000,
+          "title": "Violence against women: UN sheds light on global femicide crisis, digital abuse",
+          "source": "UN",
+          "@timestamp": "2026-04-14T06:36:09.230322+00:00"
+        }
+      },
+      {
+        "_index": "news",
+        "_id": "https://news.un.org/feed/view/en/story/2025/11/1166454",
+        "_score": 1,
+        "_source": {
+          "sentiment_label": "positive",
+          "sentiment": 0.95,
+          "topic": "politics",
+          "entities": [
+            {
+              "value": "Oceania",
+              "entity_type": "location"
+            },
+            {
+              "value": "Catherine Russell",
+              "entity_type": "person"
+            },
+            {
+              "value": "World Health Organization",
+              "entity_type": "organization"
+            }
+          ],
+          "summary": " Children's exposure to intimate partner violence is highest in Oceania, sub-Saharan Africa, and Central and Southern Asia .",
+          "link": "https://news.un.org/feed/view/en/story/2025/11/1166454",
+          "publish_date": 1764072000,
+          "title": "Over 600 million children exposed to violence at home, UNICEF warns",
+          "source": "UN",
+          "@timestamp": "2026-04-14T06:33:56.312488+00:00"
+        }
+      },
+      {
+        "_index": "news",
+        "_id": "https://news.un.org/feed/view/en/story/2025/12/1166551",
+        "_score": 1,
+        "_source": {
+          "sentiment_label": "positive",
+          "sentiment": 0.94,
+          "topic": "politics",
+          "entities": [
+            {
+              "value": "Aksonethip Somvorachit",
+              "entity_type": "person"
+            },
+            {
+              "value": "Resident Coordinator",
+              "entity_type": "title"
+            }
+          ],
+          "summary": " Aksonethip Somvorachit spoke to UN News about the challenges she has faced as a staff focal point for PSEA .",
+          "link": "https://news.un.org/feed/view/en/story/2025/12/1166551",
+          "publish_date": 1765281600,
+          "title": "First Person: Small acts, lasting impact, boost dignity for women in Lao PDR",
+          "source": "UN",
+          "@timestamp": "2026-04-14T06:32:06.425613+00:00"
+        }
+      },
+      {
+        "_index": "news",
+        "_id": "https://news.un.org/feed/view/en/story/2025/12/1166482",
+        "_score": 1,
+        "_source": {
+          "sentiment_label": "negative",
+          "sentiment": -0.63,
+          "topic": "environment",
+          "entities": [
+            {
+              "value": "António Guterres",
+              "entity_type": "person"
+            },
+            {
+              "value": "UNICEF",
+              "entity_type": "organization"
+            }
+          ],
+          "summary": " Indonesia, Philippines, Sri Lanka, Thailand and Viet Nam are among the countries most affected . UN Secretary-General António Guterres expresses his deep sadness over the tragic loss of life .",
+          "link": "https://news.un.org/feed/view/en/story/2025/12/1166482",
+          "publish_date": 1764676800,
+          "title": "Asia: Lives upended by cyclones, ‘extreme’ rainfall on the rise, warn UN agencies",
+          "source": "UN",
+          "@timestamp": "2026-04-14T04:19:58.946518+00:00"
+        }
+      },
+      {
+        "_index": "news",
+        "_id": "https://news.un.org/feed/view/en/story/2025/12/1166558",
+        "_score": 1,
+        "_source": {
+          "sentiment_label": "positive",
+          "sentiment": 1,
+          "topic": "environment",
+          "entities": [
+            {
+              "value": "UN Environment Programme",
+              "entity_type": "organization"
+            },
+            {
+              "value": "Cynthia Houniuhi",
+              "entity_type": "person"
+            }
+          ],
+          "summary": " UN Environment Programme names five new climate visionaries as its 2025 Champions of the Earth . The UN's highest environmental honour is the UN's highest environmental honour .",
+          "link": "https://news.un.org/feed/view/en/story/2025/12/1166558",
+          "publish_date": 1765368000,
+          "title": "Five climate trailblazers: UNEP’S 2025 Champions of the Earth",
+          "source": "UN",
+          "@timestamp": "2026-04-14T04:06:20.038786+00:00"
+        }
+      }
+    ]
+  }
+}

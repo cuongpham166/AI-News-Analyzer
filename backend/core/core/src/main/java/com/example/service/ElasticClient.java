@@ -18,9 +18,8 @@ import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.CalendarInterval; 
 import co.elastic.clients.json.JsonData;
 
-import java.util.Arrays;
-
 import com.example.dto.InferenceNews;
+import com.example.dto.TopRadarDTO;
 import com.example.dto.GlobalTrendsDTO;
 import com.example.dto.GlobalEntityTrendsDTO;
 
@@ -91,7 +90,6 @@ public class ElasticClient {
     public SearchResponse<Void> getGlobalTrends (long startEpoch,long endEpoch, String intervalUnit) throws IOException {
         CalendarInterval intervalEnum = AggregationInterval.mapInterval(intervalUnit);
         SearchRequest searchRequest = aggRequest.getGlobalTrendsRequest(startEpoch,endEpoch,intervalEnum);
-
         SearchResponse<Void> response = esClient.search(searchRequest, Void.class); 
         return response;
     }
@@ -127,18 +125,33 @@ public class ElasticClient {
         return allNews;
     }
 
+    public TopRadarDTO getTopicRadarWithRelativeInterval (String intervalUnit, int amount) throws IOException {
+        long[] result = AggregationInterval.computeEpochRangeRelative(intervalUnit,amount);
+        long startEpoch = result[0];
+        long endEpoch   = result[1];
+        SearchResponse<Void> response = getTopicRadar(startEpoch,endEpoch);
+        TopRadarDTO radarResult = aggMapping.mapTopicRadar(response);
+        return radarResult;
+    }
+
+    public SearchResponse<Void> getTopicRadar(long startEpoch,long endEpoch) throws IOException {
+        SearchRequest searchRequest = aggRequest.getTopicRadarRequest(startEpoch,endEpoch);
+        SearchResponse<Void> response = esClient.search(searchRequest, Void.class);
+        return response;
+    }
+
     public static void main(String[] args) throws IOException {
         ElasticClient esClient = new ElasticClient();
 
         GlobalTrendsDTO trendsResult = esClient.getGlobalTrendsWithRelativeInterval("week",1);
-        System.out.println("Global Trends: " + trendsResult);
-        System.out.println("---------------------------------------------------------------------");
+        //System.out.println("Global Trends: " + trendsResult);
+        //System.out.println("---------------------------------------------------------------------");
         GlobalEntityTrendsDTO entityTrendsResult = esClient.getGlobalEntityWithRelativeInterval("week",2);
         //System.out.println("Global Entity Trends: " + entityTrendsResult);
         List<InferenceNews> allPositveImpactNews = esClient.getImpactArticlesWithRelativeInterval("week",2,3,true);
         //System.out.println("Positive Impact News: " + allPositveImpactNews);
         List<InferenceNews> allNegativeImpactNews = esClient.getImpactArticlesWithRelativeInterval("week",2,3,false);
-        System.out.println("Negative Impact News: " + allNegativeImpactNews);
+        //System.out.println("Negative Impact News: " + allNegativeImpactNews);
         
     }
 }

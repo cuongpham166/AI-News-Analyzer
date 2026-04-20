@@ -5,6 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
 import com.example.dto.NewsDTO;
+import com.example.dto.SpatialMapDTO;
+import com.example.dto.PowerCoupleDTO;
+import com.example.dto.EventTrackerDTO;
+import com.example.dto.VolatilityIndexDTO;
+import com.example.utils.AggregationMapping;
+import com.example.utils.AggregationQuery;
+import com.example.utils.AggregationInterval;
+
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class PostgresClient {
@@ -13,24 +21,23 @@ public class PostgresClient {
     private final String user = this.dotenv.get("POSTGRES_USER");
     private final String password = this.dotenv.get("POSTGRES_PASSWORD");
     private final Connection postgresClient;
+    private final AggregationMapping aggMapping;
+    private final AggregationQuery aggQuery;
 
     public PostgresClient() throws SQLException {
         this.postgresClient = DriverManager.getConnection(this.url, this.user, this.password);
+        this.aggMapping = new AggregationMapping();
+        this.aggQuery = new AggregationQuery();
     }
 
     public List<NewsDTO> getAllNews(int limit) throws SQLException {
         List<NewsDTO> newsList = new ArrayList<>();
-        String sql = "SELECT news.*, topic.name AS topic_name, source.name AS source_name "
-                + "FROM news "
-                + "LEFT JOIN topic ON news.topic_id = topic.id "
-                + "LEFT JOIN source ON news.source_id = source.id "
-                + "ORDER BY publish_date DESC "
-                + "LIMIT ?";
+        String sql = aggQuery.getAllNewsQuery(limit);
         try(PreparedStatement pstmt = this.postgresClient.prepareStatement(sql)){
             pstmt.setInt(1, limit);
             try(ResultSet rs = pstmt.executeQuery()){
                 while (rs.next()) {
-                    newsList.add(mapResultSetToNews(rs));
+                    newsList.add(aggMapping.mapDetailedNews(rs));
                 }
             }
         }
@@ -38,17 +45,12 @@ public class PostgresClient {
     }
 
     public NewsDTO getNewsByLink(String link) throws SQLException {
-        String sql = "SELECT news.*, topic.name AS topic_name, source.name AS source_name "
-                + "FROM news "
-                + "LEFT JOIN topic ON news.topic_id = topic.id "
-                + "LEFT JOIN source ON news.source_id = source.id "
-                + "WHERE news.link = ?";
-
+        String sql = aggQuery.getNewsByLinkQuery(link);
         try(PreparedStatement pstmt = this.postgresClient.prepareStatement(sql)){
             pstmt.setString(1, link);
             try (ResultSet rs = pstmt.executeQuery()){
                 if (rs.next()) {
-                    return mapResultSetToNews(rs);
+                    return aggMapping.mapDetailedNews(rs);
                 }else{
                     return null;
                 }
@@ -56,29 +58,94 @@ public class PostgresClient {
         }
     }
 
-    public NewsDTO mapResultSetToNews(ResultSet rs) throws SQLException {
-        NewsDTO news = new NewsDTO();
-        news.setId(rs.getInt("id"));
-        news.setTitle(rs.getString("title"));
-        news.setPublishDate(rs.getTimestamp("publish_date"));
-        news.setLink(rs.getString("link"));
-        news.setLanguage(rs.getString("lang"));
-        news.setFullText(rs.getString("full_text"));
-        news.setSummary(rs.getString("summary"));
-        news.setSentimentLabel(rs.getString("sentiment_label"));
-        news.setSentiment(rs.getBigDecimal("sentiment"));
-        news.setTopicId(rs.getInt("topic_id"));
-        news.setSourceId(rs.getInt("source_id"));
-        news.setTopic_name(rs.getString("topic_name"));
-        news.setSource_name(rs.getString("source_name"));
-        return news;
+    public List<SpatialMapDTO> getSpatialMapWithRelativeInterval (String intervalUnit, int amount)throws SQLException {
+        List<SpatialMapDTO> mapList = new ArrayList<>();
+
+        Timestamp[] result = AggregationInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
+        Timestamp startRange = result[0];
+        Timestamp endRange = result[1];
+
+        String sql = aggQuery.getSpatialMapQuery(startRange, endRange);
+        try(PreparedStatement pstmt = this.postgresClient.prepareStatement(sql)){
+            pstmt.setTimestamp(1, startRange);
+            pstmt.setTimestamp(2, endRange);
+            try (ResultSet rs = pstmt.executeQuery()){
+                if (rs.next()) {
+                    while (rs.next()) {
+                        mapList.add(aggMapping.mapDetailedSpatialMap(rs));
+                    }
+                }
+            }
+        }
+        return mapList;
+    }
+
+    public List<PowerCoupleDTO> getPowerCoupleWithRelativeInterval (String intervalUnit, int amount)throws SQLException {
+        List<PowerCoupleDTO> powerCoupleList = new ArrayList<>();
+        Timestamp[] result = AggregationInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
+        Timestamp startRange = result[0];
+        Timestamp endRange = result[1];
+        String sql = aggQuery.getPowerCoupleQuery(startRange, endRange);
+        try(PreparedStatement pstmt = this.postgresClient.prepareStatement(sql)){
+            pstmt.setTimestamp(1, startRange);
+            pstmt.setTimestamp(2, endRange);
+            try (ResultSet rs = pstmt.executeQuery()){
+                if (rs.next()) {
+                    while (rs.next()) {
+                        powerCoupleList.add(aggMapping.mapDetailedPowerCouple(rs));
+                    }
+                }
+            }            
+        }
+        return powerCoupleList;
+    }
+
+    public List<EventTrackerDTO> getEventTrackerWithRelativeInterval (String intervalUnit, int amount)throws SQLException {
+        List <EventTrackerDTO> eventList = new ArrayList<>();
+        Timestamp[] result = AggregationInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
+        Timestamp startRange = result[0];
+        Timestamp endRange = result[1];
+        String sql = aggQuery.getEventTrackerQuery(startRange, endRange);
+        try(PreparedStatement pstmt = this.postgresClient.prepareStatement(sql)){
+            pstmt.setTimestamp(1, startRange);
+            pstmt.setTimestamp(2, endRange);
+            try (ResultSet rs = pstmt.executeQuery()){
+                if (rs.next()) {
+                    while (rs.next()) {
+                        eventList.add(aggMapping.mapDetailedMapTracker(rs));
+                    }
+                }
+            }             
+        }
+        return eventList;
+    }
+
+    public List<VolatilityIndexDTO> getVolatilityIndexWithRelativeInterval (String intervalUnit, int amount)throws SQLException {
+        List <VolatilityIndexDTO> volatilityIndexList = new ArrayList<>();
+        Timestamp[] result = AggregationInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
+        Timestamp startRange = result[0];
+        Timestamp endRange = result[1];
+        String sql = aggQuery.getVolatilityQuery(startRange, endRange);
+        try(PreparedStatement pstmt = this.postgresClient.prepareStatement(sql)){
+            pstmt.setTimestamp(1, startRange);
+            pstmt.setTimestamp(2, endRange);
+            try (ResultSet rs = pstmt.executeQuery()){
+                if (rs.next()) {
+                    while (rs.next()) {
+                        volatilityIndexList.add(aggMapping.mapDetailedVolatilityIndex(rs));
+                    }
+                }
+            }               
+        }
+        return volatilityIndexList;
     }
 
     public static void main(String[] args) throws SQLException {
         PostgresClient postgresClient = new PostgresClient();
-        //NewsDTO foundNews = postgresClient.getNewsByLink("https://news.un.org/feed/view/en/story/2026/01/1166814");
-        //System.out.println("News: "+foundNews);
-        //List<NewsDTO> foundNewsList = postgresClient.getAllNews(1);
-        //System.out.println("News List : "+foundNewsList);
+        List<NewsDTO> foundNewsList = postgresClient.getAllNews(1);
+        List<SpatialMapDTO> result = postgresClient.getSpatialMapWithRelativeInterval("month",5);
+        List<PowerCoupleDTO> powerCoupleResult = postgresClient.getPowerCoupleWithRelativeInterval("month",5);
+        
+        System.out.print("Test: "+powerCoupleResult);
     }
 }

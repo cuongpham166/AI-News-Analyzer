@@ -1,17 +1,14 @@
 package com.example.utils;
 
 import java.util.*;
-import java.util.Collections;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch._types.aggregations.DateHistogramBucket;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 
-import com.example.dto.GlobalTrendsDTO;
-import com.example.dto.TrendBucketDTO;
-
-import com.example.dto.GlobalEntityTrendsDTO;
-import com.example.dto.EntityCountDTO;
+import com.example.dto.*;
 
 public class AggregationMapping {
 
@@ -108,6 +105,81 @@ public class AggregationMapping {
         }
         result.setTimeline(timeline);
         return result;
+    }
+    
+    public TopRadarDTO mapTopicRadar(SearchResponse<Void> response) {
+        TopRadarDTO result = new TopRadarDTO();
+        List<TopicDistributionDTO> topicDistributionEntities = new ArrayList<>();
+
+        List<StringTermsBucket> topicBuckets = response.aggregations()
+            .get("topic_distribution")
+            .sterms()
+            .buckets()
+            .array();
+
+        for (StringTermsBucket topicBucket : topicBuckets) {
+            TopicDistributionDTO topicDTO = new TopicDistributionDTO();
+            topicDTO.setName(topicBucket.key().stringValue());
+            topicDTO.setCount(topicBucket.docCount());
+            topicDistributionEntities.add(topicDTO);
+        }
+
+        long totalCount = response.hits().total().value();
+
+        result.setDistribution(topicDistributionEntities);
+        result.setCount(totalCount);
+
+        return result;
+    }
+
+    public NewsDTO mapDetailedNews (ResultSet rs) throws SQLException {
+        NewsDTO news = new NewsDTO();
+        news.setId(rs.getInt("id"));
+        news.setTitle(rs.getString("title"));
+        news.setPublishDate(rs.getTimestamp("publish_date"));
+        news.setLink(rs.getString("link"));
+        news.setLanguage(rs.getString("lang"));
+        news.setFullText(rs.getString("full_text"));
+        news.setSummary(rs.getString("summary"));
+        news.setSentimentLabel(rs.getString("sentiment_label"));
+        news.setSentiment(rs.getBigDecimal("sentiment"));
+        news.setTopicId(rs.getInt("topic_id"));
+        news.setSourceId(rs.getInt("source_id"));
+        news.setTopic_name(rs.getString("topic_name"));
+        news.setSource_name(rs.getString("source_name"));
+        return news;
+    }
+
+    public SpatialMapDTO mapDetailedSpatialMap(ResultSet rs) throws SQLException {
+        SpatialMapDTO spatialMap = new SpatialMapDTO();
+        spatialMap.setLocation(rs.getString("location"));
+        spatialMap.setCount(rs.getInt("count"));
+        return spatialMap;
+    }
+
+    public PowerCoupleDTO mapDetailedPowerCouple(ResultSet rs) throws SQLException {
+        PowerCoupleDTO powerCouple = new PowerCoupleDTO();
+        powerCouple.setPerson(rs.getString("person"));
+        powerCouple.setOrganization(rs.getString("organization"));
+        powerCouple.setStrength(rs.getInt("strength"));
+        return powerCouple;
+    }
+
+    public EventTrackerDTO mapDetailedMapTracker(ResultSet rs) throws SQLException {
+        EventTrackerDTO eventTracker = new EventTrackerDTO();
+        eventTracker.setEvent(rs.getString("event"));
+        eventTracker.setLocation(rs.getString("location"));
+        eventTracker.setStrength(rs.getInt("strength"));
+        return eventTracker;
+    }
+
+    public VolatilityIndexDTO mapDetailedVolatilityIndex(ResultSet rs) throws SQLException {
+        VolatilityIndexDTO volatilityIndex = new VolatilityIndexDTO();
+        volatilityIndex.setEntity_name(rs.getString("entity_name"));
+        volatilityIndex.setMentions(rs.getInt("mentions"));
+        volatilityIndex.setAvg_sentiment(rs.getFloat("avg_sentiment"));
+        volatilityIndex.setVolatility(rs.getFloat("volatility"));
+        return volatilityIndex;
     }
     
 }

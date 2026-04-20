@@ -114,4 +114,22 @@ public class AggregationRequest {
             ))
         );
     }
+
+    public SearchRequest getTopicRadarRequest(long startEpoch, long endEpoch) throws IOException{
+        return SearchRequest.of(s ->s
+            .index("news")
+            .size(0)
+            .query(q -> q.bool(b -> b
+                .filter(f -> f.range(r -> r
+                    .field("publish_date")
+                    .gte(JsonData.of(startEpoch))
+                    .lte(JsonData.of(endEpoch))
+                ))                
+            ))
+            .aggregations("topic_distribution", a -> a
+                .terms(t -> t.field("topic.keyword").size(10))
+            )
+        );
+    }
+
 }

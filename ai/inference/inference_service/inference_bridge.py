@@ -4,7 +4,7 @@ from nats.aio.client import Client as NATS
 import nats 
 import hashlib
 
-from ai.inference.inference_service import InferenceService
+from ai.inference.inference_service.inference_service import InferenceService
 
 import os
 from dotenv import load_dotenv

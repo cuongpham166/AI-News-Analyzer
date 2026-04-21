@@ -1,18 +1,28 @@
 package com.example.service;
 
 import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
+import java.util.Map;
+import java.util.HashMap;
+
 import com.example.dto.NewsDTO;
 import com.example.dto.SpatialMapDTO;
 import com.example.dto.PowerCoupleDTO;
 import com.example.dto.EventTrackerDTO;
 import com.example.dto.VolatilityIndexDTO;
+import com.example.dto.Neo4jEntityDTO;
+
 import com.example.utils.AggregationMapping;
 import com.example.utils.AggregationQuery;
 import com.example.utils.AggregationInterval;
+import com.example.utils.Neo4jQuery;
 
+import com.example.service.Neo4jClient;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.Session;
+import org.neo4j.driver.Values;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class PostgresClient {
@@ -23,11 +33,15 @@ public class PostgresClient {
     private final Connection postgresClient;
     private final AggregationMapping aggMapping;
     private final AggregationQuery aggQuery;
+    private final Neo4jQuery neo4jQuery;
+    private final Neo4jClient neo4jClient;
 
     public PostgresClient() throws SQLException {
         this.postgresClient = DriverManager.getConnection(this.url, this.user, this.password);
         this.aggMapping = new AggregationMapping();
         this.aggQuery = new AggregationQuery();
+        this.neo4jQuery = new Neo4jQuery();
+        this.neo4jClient = new Neo4jClient();
     }
 
     public List<NewsDTO> getAllNews(int limit) throws SQLException {
@@ -140,12 +154,80 @@ public class PostgresClient {
         return volatilityIndexList;
     }
 
+    public void syncNewsToNeo4j() throws SQLException {
+        List<NewsDTO> newsList = new ArrayList<>();
+        String sql = aggQuery.getAllNewsQueryWithoutLimit();
+        String syncQuery = neo4jQuery.integrateDataIntoNeo4jQuery();
+
+        try(PreparedStatement pstmt = this.postgresClient.prepareStatement(sql)){
+            try(ResultSet rs = pstmt.executeQuery()){
+                while (rs.next()) {
+                    newsList.add(aggMapping.mapDetailedNews(rs));
+                }
+            }
+        }
+
+        Driver neo4jDriver = this.neo4jClient.getDriver();
+        try (Session session = neo4jDriver.session()) {
+            for(NewsDTO news : newsList){
+                if (news.getTopic_name() != null && !news.getTopic_name().trim().isEmpty()) {           
+                    Timestamp timestamp = news.getPublishDate();
+                    long epochMillis = timestamp.getTime();
+
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("source_name", news.getSource_name());
+                    params.put("topic_name", news.getTopic_name());
+                    params.put("link", news.getLink());
+                    params.put("title", news.getTitle());
+                    params.put("publish_date", epochMillis);
+                    params.put("sentiment", news.getSentiment() != null ? news.getSentiment().doubleValue() : 0.0);
+
+                    session.executeWrite(tx -> {
+                        tx.run(syncQuery, params);
+                            return null; 
+                    });                   
+                }else{
+                    System.out.println("Skipping news with null topic: " + news.getLink());
+                }
+            }
+        } 
+  
+    }
+
+    public void syncNewsEntityToNeo4j() throws SQLException {
+        List<Neo4jEntityDTO> newsEntitiesList = new ArrayList<>();
+        String sql = aggQuery.syncEntityToNeo4jQuery();
+        String syncQuery = neo4jQuery.integrateEntityDataIntoNeo4jQuery();
+
+        try(PreparedStatement pstmt = this.postgresClient.prepareStatement(sql)){
+            try(ResultSet rs = pstmt.executeQuery()){
+                while (rs.next()) {
+                    newsEntitiesList.add(aggMapping.mapNeo4jEntity(rs));
+                }
+            }
+        }       
+        
+        Driver neo4jDriver = this.neo4jClient.getDriver();
+        try (Session session = neo4jDriver.session()) { 
+            for (Neo4jEntityDTO newsEntity : newsEntitiesList){
+                Map<String, Object> params = new HashMap<>();
+                params.put("entity_name", newsEntity.getEntity_name());
+                params.put("news_link", newsEntity.getNews_link());    
+                
+                session.executeWrite(tx -> {
+                    tx.run(syncQuery, params);
+                        return null; 
+                });  
+            }
+        }
+    }
+
     public static void main(String[] args) throws SQLException {
         PostgresClient postgresClient = new PostgresClient();
         List<NewsDTO> foundNewsList = postgresClient.getAllNews(1);
         List<SpatialMapDTO> result = postgresClient.getSpatialMapWithRelativeInterval("month",5);
         List<PowerCoupleDTO> powerCoupleResult = postgresClient.getPowerCoupleWithRelativeInterval("month",5);
         
-        System.out.print("Test: "+powerCoupleResult);
+        postgresClient.syncNewsEntityToNeo4j();
     }
 }

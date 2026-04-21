@@ -182,4 +182,10 @@ public class AggregationMapping {
         return volatilityIndex;
     }
     
+    public Neo4jEntityDTO mapNeo4jEntity(ResultSet rs) throws SQLException {
+        Neo4jEntityDTO neo4jEntity = new Neo4jEntityDTO();
+        neo4jEntity.setEntity_name(rs.getString("entity_name"));
+        neo4jEntity.setNews_link(rs.getString("news_link"));
+        return neo4jEntity;
+    }
 }

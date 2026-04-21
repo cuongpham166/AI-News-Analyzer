@@ -9,17 +9,26 @@ A scalable, event-driven AI platform that collects news from RSS feeds, enriches
 - **Event-driven Pipeline** — Decoupled microservices communicating via NATS for reliable, scalable processing.
 - **Data Enrichment** — Language detection, deduplication, cleaning, and metadata extraction.
 - **AI Analysis** — Inference using Hugging Face Transformers and ONNX Runtime for sentiment, NER, zero-shot classification, and article summarization.
-- **Storage & Search** — Dual storage with Elasticsearch (full-text + semantic search + Kibana dashboards) and PostgreSQL.
+- **Triple-Engine Storage** —
+  - **Elasticsearch** — Full-text search and time-series macro-trends.
+  - **PostgreSQL** — Relational metadata, statistical profiling, and data integrity.
+  - **Neo4j** — **[New]** Knowledge Graph for deep relationship mining and actor-network analysis.
+- **Asynchronous Enrichment** - A modular pipeline that establishes data "anchors" (Source/News) and asynchronously backfills AI-extracted intelligence (Entities/Topics) into the graph.
 - **Frontend** — React UI served behind NGINX for browsing AI-enriched news.
 
-### Key Features (current version 1.0)
+### Key Features (Version 2.0)
 
 - **News Retrieval** — Efficiently ingest and fetch the latest news data across various global RSS sources. Currently the RSS news are fetched from UN.
 - **Full-Text Search** — Powered by Elasticsearch. Currently, the user can find news using specific keywords. The next version will allow users to find specific entries, topics, etc.
-- **News Analysis** — The platform is designed to perform analyses based on three levels of information density. These design help user move from broad petterns to specific evidence in three steps:
-  - **Macro Layer (When?)** — It is visualized by Area Chart. This layer does more than just track sentiment changes and loudness spikes; it also automatically extracts the Top Topics for any given interval. When an event is breaking, users may quickly determine whether particular topics are driving the story.
-  - **Meso Layer (Who?)** — Finding the "Main Characters." This layer identifies particular entities (such as organizations, person, location, etc) involved in a subject spike. The Treemap identifies the main characters by coloring items according to sentiment and scaling them according to the number of mentions.
-  - **Micro Layer (Why?)** — Users can read the full text of the most impactful positive and negative articles for any given time period.
+- **Multi-Dimensional Analysis** — The platform is designed to perform analyses based on three levels of information density. These design help user move from broad petterns to specific evidence in four steps:
+  - **The Pulse Layer (The "What happened?")** — This is the High-Level View. It uses big charts to show you how much news is happening and if the "mood" (sentiment) of the world is happy or sad.
+    - **Goal:** Spot a sudden spike in news so you know exactly when a big event started.
+  - **The Character Layer (The "Who is involved?")** — This is the Zoomed-In View. It uses a "Treemap" (a box chart) to show you the main people, companies, or countries mentioned in the news.
+    - **Goal:** See who the "Main Characters" are. The bigger their box, the more they are being talked about.
+  - **The Evidence Layer (The "Why is it happening?")** — This is the Deep-Dive View. Here, you can read the actual articles and AI-generated summaries.
+    - **Goal:** Read the facts. It helps you understand the specific reasons behind the news without having to read hundreds of long stories.
+  - **The Connection Layer (Relational)** — **[New]** This is the Network View (powered by the Knowledge Graph). It shows lines connecting different people and topics.
+    - **Goal:** Find hidden links. For example, it can show you that "Person A" and "Person B" are connected because they were both mentioned in the same five news stories, even if they aren't in the same headline.
 - **Dynamic Intervals** — Flexible time-window filtering (1 day, 1 week, 2 weeks, etc.) to switch between "Breaking News" and "Historical Trends."
 
 ## Overview
@@ -33,7 +42,7 @@ A scalable, event-driven AI platform that collects news from RSS feeds, enriches
 
 ![PostgresSQL](https://img.shields.io/badge/postgresql-4169E1?logo=postgresql&logoColor=white&style=for-the-badge)
 ![ElasticSearch](https://img.shields.io/badge/elasticsearch-005571?logo=elasticsearch&logoColor=white&style=for-the-badge)
-![Kibana](https://img.shields.io/badge/kibana-005571?logo=kibana&logoColor=white&style=for-the-badge)
+![Neo4j](https://img.shields.io/badge/neo4j-005571?logo=neo4j&logoColor=white&style=for-the-badge)
 
 ![PyTorch](https://img.shields.io/badge/pytorch-EE4C2C?logo=pytorch&logoColor=white&style=for-the-badge)
 ![ONNX](https://img.shields.io/badge/onnx-005CED?logo=onnx&logoColor=white&style=for-the-badge)
@@ -41,10 +50,11 @@ A scalable, event-driven AI platform that collects news from RSS feeds, enriches
 
 ![NGINX](https://img.shields.io/badge/nginx-009639?logo=nginx&logoColor=white&style=for-the-badge)
 ![Docker](https://img.shields.io/badge/docker-2496ED?logo=docker&logoColor=white&style=for-the-badge)
+![Kibana](https://img.shields.io/badge/kibana-005571?logo=kibana&logoColor=white&style=for-the-badge)
 
 ### Architecture Overview
 
-![Overview Structure](/images/Final_Structure.png)
+![Overview Structure](/images/Final_Structure_v2.png)
 
 ### Database Overview
 
@@ -52,7 +62,7 @@ A scalable, event-driven AI platform that collects news from RSS feeds, enriches
 
 ![PostgresSQL Structure](/images/Final_DB_Diagram.png)
 
-#### ElasticSearch
+#### ElasticSearch - Mapping
 
 ```
 {
@@ -78,6 +88,21 @@ A scalable, event-driven AI platform that collects news from RSS feeds, enriches
     }
 }
 ```
+
+#### Neo4j - Graph Data Model
+
+- **Nodes:**
+  - **News**: The central anchor containing title, sentiment, and temporal data.
+  - **Entity**: Real-world actors (People, Organizations, Locations) extracted via NER.
+  - **Source**: Media outlets and data origins.
+  - **Topic**: Thematic classifications (e.g., Politic, Technology, Economy).
+
+- **Relationships:**
+  - **(:Source)-[:PUBLISHED]->(:News)**: The central anchor containing title, sentiment, and temporal data.
+  - **(:News)-[:COVERS]->(:Topic)**: The central anchor containing title, sentiment, and temporal data.
+  - **(:News)-[:MENTIONS]->(:Entity)**: The "Link" providing traceability for every connection.
+  - **(:Entity)-[:CO_OCCURS_WITH]->(:Entity)**: A weighted relationship (weight, last_seen) representing the strength of the bond between actors found in shared contexts.
+  - **(:Entity)-[:RELATED_TO_TOPIC]->(:Topic)**: Semantic profiling of entities.
 
 #### Datanase Usage
 
@@ -111,9 +136,17 @@ The platform follows a clean, event-driven data pipeline that moves news article
 3. **AI Analysis** — The Inference Bridge consumes from `news.enriched` and sends data to the Inference Layer for processing. Analyzed results are published to the `news.ai` topic.
 4. **Storage** — The PostgresBridge and ElasticBridge consume the results and persist them:
    - **PostgreSQL (Structured metadata)** — First, PostgresBridge consumes data from `news.enriched` and sends it to PostgresLayer for persistence. Later, it also consumes from `news.ai` to update the PostgreSQL data with new inference data.
+   - **Neo4j (Relational data)** — First, Neo4jBridge consumes data from `news.enriched` and sends it to Neo4jLayer for persistence. Later, it also consumes from `news.ai` to update the Neo4j data with new inference data.
    - **ElasticSearch (Inference data)** — ElasticBridge consumes data from `news.ai`and sends it to ElasticLayer for persistence. (Kibana dashboards for visualization)
 
 The entire flow is **asynchronous and decoupled** thanks to **NATS** messaging, allowing independent scaling of each stage.
 
-![Overview Structure](/images/Flow.png)
+![Overview Structure](/images/Flow_v2.png)
+_The Flow Chart_
+
 ![Dashboard](/images/Project.png)
+_The Example of UI_
+
+![Neo4j](/images/Neo4j_Example.png)
+
+_The Example of Data in Neo4j_

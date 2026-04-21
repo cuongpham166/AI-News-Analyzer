@@ -15,6 +15,14 @@ public class AggregationQuery {
         return query;
     }
 
+    public String getAllNewsQueryWithoutLimit() {
+        String query = "SELECT news.*, topic.name AS topic_name, source.name AS source_name "
+                + "FROM news "
+                + "LEFT JOIN topic ON news.topic_id = topic.id "
+                + "LEFT JOIN source ON news.source_id = source.id";
+        return query;        
+    }
+
     public String getNewsByLinkQuery (String link) {
         String query = "SELECT news.*, topic.name AS topic_name, source.name AS source_name "
                 + "FROM news "
@@ -81,6 +89,13 @@ public class AggregationQuery {
                 + "AND et1.name = 'event' AND et2.name = 'location' "
                 + "GROUP BY e1.value, e2.value "
                 + "ORDER BY strength DESC LIMIT 50 ";
+        return query;
+    }
+
+    public String syncEntityToNeo4jQuery(){
+        String query = "Select n.link as news_link, e.value AS entity_name FROM news n "
+            + "JOIN news_entity ne ON n.id = ne.news_id "
+            + "JOIN entity e ON ne.entity_id = e.id ";
         return query;
     }
 }

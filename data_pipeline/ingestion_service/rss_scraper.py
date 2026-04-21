@@ -27,20 +27,30 @@ class RssScraper:
         self.js = js
         self.seen_links = set()
 
+
     async def publish_article(self, article: dict):
-        await self.js.publish(
-            RAW_SUBJECT, 
-            json.dumps(article).encode()
-        )
+        try:
+            await asyncio.wait_for(
+                self.js.publish(
+                    RAW_SUBJECT,
+                    json.dumps(article).encode()
+                ),
+                timeout=10
+            )
+        except asyncio.TimeoutError:
+            print(f"Publish timeout: {article.get('link')}")
 
     async def scrap_article(self):
         for news_url in self.rss_url:
             feed = feedparser.parse(news_url)
+
             for entry in feed.entries:
                 link = getattr(entry, "link", "")
                 if not link or link in self.seen_links:
                     continue
+
                 self.seen_links.add(link)
+
                 raw_date = getattr(entry, "published", "")
                 article_dict = {
                     "title": getattr(entry, "title", ""),
@@ -49,6 +59,10 @@ class RssScraper:
                     "rss_pub_date": raw_date
                 }
                 await self.publish_article(article_dict)
+
+                #important for inference stability
+                await asyncio.sleep(2)
+
                 print(f"Published raw article: {link}")
 
     async def run_periodically(self):

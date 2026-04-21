@@ -104,7 +104,7 @@ A scalable, event-driven AI platform that collects news from RSS feeds, enriches
   - **(:Entity)-[:CO_OCCURS_WITH]->(:Entity)**: A weighted relationship (weight, last_seen) representing the strength of the bond between actors found in shared contexts.
   - **(:Entity)-[:RELATED_TO_TOPIC]->(:Topic)**: Semantic profiling of entities.
 
-#### Datanase Usage
+#### Database Usage
 
 - **PostgreSQL : The Relational Backbone of the application** — Use Cases:
   - Structured Data Storage
@@ -113,6 +113,9 @@ A scalable, event-driven AI platform that collects news from RSS feeds, enriches
 - **Elasticsearch : The Search & Discovery Engine** — Use Cases:
   - Full-Text Search
   - Unstructured Data Discovery
+- **Neo4j : The Connection Engine** — Use Cases:
+  - This is our Knowledge Graph. Instead of rows and columns, it stores data as "Nodes" (People, Topics) and "Lines" (Connections).
+  - Mapping the "Discovery Layer." It finds hidden links between different people or organizations by tracking how often they appear together in the same news stories.
 
 ### Inference Overview
 

@@ -3,7 +3,7 @@ import asyncio
 from nats.aio.client import Client as NATS
 import nats 
 from datetime import datetime, timezone
-from data_pipeline.db_layer.elastic_service.elastic_layer import ElasticLayer
+from data_pipeline.db_service.elastic_service.elastic_layer import ElasticLayer
 
 import os
 from dotenv import load_dotenv

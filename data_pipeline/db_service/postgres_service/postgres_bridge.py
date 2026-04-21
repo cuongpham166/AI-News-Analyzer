@@ -5,7 +5,7 @@ from nats.aio.client import Client as NATS
 import nats 
 from datetime import datetime, timezone
 
-from data_pipeline.db_layer.postgres_service.postgres_layer import PostgresLayer
+from data_pipeline.db_service.postgres_service.postgres_layer import PostgresLayer
 
 import os
 from dotenv import load_dotenv

@@ -5,7 +5,7 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.QueryConfig;
 
-import com.example.utils.Neo4jQuery;
+import com.example.utils.DiscoveryQuery;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -16,12 +16,12 @@ public class DiscoveryRepository {
     private final String neo4jPassword = this.dotenv.get("NEO4J_PASSWORD");
     private final String neo4j_DB = this.dotenv.get("NEO4J_DB"); 
     private Driver driver = null;
-    private final Neo4jQuery neo4jQuery;
+    private final DiscoveryQuery neo4jQuery;
 
 
     public DiscoveryRepository(){
         this.driver = GraphDatabase.driver(this.neo4jUri, AuthTokens.basic(this.neo4jUser, this.neo4jPassword));
-        this.neo4jQuery = new Neo4jQuery();
+        this.neo4jQuery = new DiscoveryQuery();
     }
 
 

@@ -17,7 +17,7 @@ import com.example.dto.Neo4jEntityDTO;
 import com.example.utils.AggregationMapping;
 import com.example.utils.AggregationQuery;
 import com.example.utils.AggregationInterval;
-import com.example.utils.Neo4jQuery;
+import com.example.utils.DiscoveryQuery;
 
 import com.example.repository.DiscoveryRepository;
 import org.neo4j.driver.Driver;
@@ -33,14 +33,14 @@ public class MetaDataRepository {
     private final Connection postgresClient;
     private final AggregationMapping aggMapping;
     private final AggregationQuery aggQuery;
-    private final Neo4jQuery neo4jQuery;
+    private final DiscoveryQuery neo4jQuery;
     private final DiscoveryRepository discoveryRepo;
 
     public MetaDataRepository() throws SQLException {
         this.postgresClient = DriverManager.getConnection(this.url, this.user, this.password);
         this.aggMapping = new AggregationMapping();
         this.aggQuery = new AggregationQuery();
-        this.neo4jQuery = new Neo4jQuery();
+        this.neo4jQuery = new DiscoveryQuery();
         this.discoveryRepo = new DiscoveryRepository();
     }
     

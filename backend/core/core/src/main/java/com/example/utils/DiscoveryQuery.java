@@ -1,7 +1,7 @@
 package com.example.utils;
 
-public class Neo4jQuery {
-    public Neo4jQuery(){};
+public class DiscoveryQuery {
+    public DiscoveryQuery(){};
 
     public String createSourceConstraintQuery(){
         String query = "CREATE CONSTRAINT source_name_unique IF NOT EXISTS "

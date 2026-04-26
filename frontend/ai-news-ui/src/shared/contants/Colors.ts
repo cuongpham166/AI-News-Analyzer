@@ -6,8 +6,10 @@ export const SentimentColors = {
 } as const;
 
 export const ThemeColors = {
-  primary: '#1A001F',
-  secondary: '#f1f3f5',
+  primary: '#2A1A1A',
+  secondary: '#e89a95',
+  third: '#fdf6f6',
+  primaryBackground: '#f6d7d5',
 } as const;
 
 export const TrendColors = [

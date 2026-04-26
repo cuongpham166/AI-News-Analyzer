@@ -17,12 +17,12 @@ import {
   SlidersHorizontalIcon,
   UserCircleIcon,
 } from '@phosphor-icons/react';
-import { ThemeColors } from '../../shared/contants/Colors';
+import { ThemeColors } from '../../../shared/contants/Colors';
 function HomeTaskbar() {
   return (
-    <Paper p='md'>
+    <Paper p='md' style={{ background: ThemeColors.third }}>
       <Group align='center' gap='lg' style={{ width: '100%' }}>
-        <Title order={3}>Overview</Title>
+        <Title order={3}>Global Pulse</Title>
 
         <Group
           gap='md'
@@ -64,7 +64,7 @@ function HomeTaskbar() {
               rightSection={<ArrowRightIcon size={14} />}
               styles={{
                 root: {
-                  backgroundColor: '#5e4c62',
+                  backgroundColor: ThemeColors.primary,
                   color: ThemeColors.secondary,
                   border: 'none',
                   '&:hover': {
@@ -84,7 +84,7 @@ function HomeTaskbar() {
             radius='xl'
             color={ThemeColors.primary}
           >
-            <UserCircleIcon size={26} />
+            <UserCircleIcon size={26} color={ThemeColors.third} />
           </ActionIcon>
         </Group>
       </Group>

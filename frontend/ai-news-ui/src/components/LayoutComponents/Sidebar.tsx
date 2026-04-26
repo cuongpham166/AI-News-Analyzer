@@ -3,21 +3,26 @@ import { useState, useEffect } from 'react';
 
 import { Stack, Text, Button, NavLink, Group } from '@mantine/core';
 import {
-  FingerprintIcon,
   GaugeIcon,
   HeartbeatIcon,
   MagnifyingGlassIcon,
   RssSimpleIcon,
   SignOutIcon,
   UserIcon,
+  TreeStructureIcon,
+  NewspaperIcon,
+  VectorThreeIcon,
 } from '@phosphor-icons/react';
 import { ThemeColors } from '../../shared/contants/Colors';
 function Sidebar() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const data = [
-    { icon: GaugeIcon, label: 'Dashboard' },
+    { icon: GaugeIcon, label: 'Global Pulse' },
+    { icon: VectorThreeIcon, label: 'Dimensions & Risks' },
+    { icon: TreeStructureIcon, label: 'Relationship' },
+    { icon: MagnifyingGlassIcon, label: 'Discovery' },
+    { icon: NewspaperIcon, label: 'News' },
     { icon: HeartbeatIcon, label: 'Activity' },
-    { icon: MagnifyingGlassIcon, label: 'Explore' },
     { icon: UserIcon, label: 'Profile' },
   ];
   return (
@@ -78,6 +83,11 @@ function Sidebar() {
         leftSection={<SignOutIcon size={25} />}
         variant='default'
         fullWidth
+        style={{
+          background: ThemeColors.secondary,
+          color: ThemeColors.primary,
+          border: 'none',
+        }}
       >
         Logout
       </Button>

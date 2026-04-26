@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
+import { getColorCode } from '../../../shared/utils/getColorCode';
 import EntityTrendsChart from './EntityTrendsChart';
 import {
   Box,
@@ -10,14 +10,17 @@ import {
   Text,
   Stack,
 } from '@mantine/core';
-import { getColorCode } from '../../shared/utils/getColorCode';
-import { SentimentColors, ThemeColors } from '../../shared/contants/Colors';
+
 function EntityTrendsCard() {
   return (
     <Paper
       p='md'
       h='calc(50vh - 60px)'
-      style={{ display: 'flex', flexDirection: 'column' }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        background: ThemeColors.third,
+      }}
     >
       <Title order={5} mb='xs' c={ThemeColors.primary}>
         Entity Mentions & Impact

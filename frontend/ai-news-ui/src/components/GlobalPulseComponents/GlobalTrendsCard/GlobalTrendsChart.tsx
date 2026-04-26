@@ -12,30 +12,19 @@ import {
 } from 'recharts';
 import { RechartsDevtools } from '@recharts/devtools';
 import { Divider, Paper, Group, Text, Stack } from '@mantine/core';
-import { TrendColors } from '../../shared/contants/Colors';
-import { getColorCode } from '../../shared/utils/getColorCode';
-import type { GlobalTrend } from '../../shared/interfaces/GlobalTrend';
-import axios from 'axios';
-
-const API_URL = 'http://localhost:8081/api';
+import type { GlobalTrend } from '../../../shared/interfaces/GlobalTrend';
+import { fetchGlobalTrends } from '../../../services/analysisService';
+import { getColorCode } from '../../../shared/utils/getColorCode';
+import { TrendColors } from '../../../shared/contants/Colors';
 
 const GlobalTrendsChart = () => {
   const [globalTrends, setGlobalTrends] = useState<GlobalTrend[]>([]);
   const [topics, setTopics] = useState<string[]>([]);
 
-  const fetchGlobalTrends = useCallback(
+  const fetchGlobalTrendsData = useCallback(
     async (intervalUnit: string, amount: number) => {
       try {
-        const response = await axios.get<GlobalTrend[]>(
-          `${API_URL}/news/global_trends`,
-          {
-            params: {
-              intervalUnit,
-              amount,
-            },
-          },
-        );
-        const result = response.data;
+        const result = await fetchGlobalTrends(intervalUnit, amount);
 
         const allTopics: string[] = Array.from(
           new Set(
@@ -63,10 +52,10 @@ const GlobalTrendsChart = () => {
 
   useEffect(() => {
     const loadGlobalTrends = async () => {
-      await fetchGlobalTrends('month', 1);
+      await fetchGlobalTrendsData('month', 1);
     };
     loadGlobalTrends();
-  }, [fetchGlobalTrends]);
+  }, [fetchGlobalTrendsData]);
 
   return (
     <ResponsiveContainer width='100%' height='95%' minHeight={300}>

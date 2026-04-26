@@ -7,15 +7,11 @@ import {
   Text as MantineText,
   Stack,
 } from '@mantine/core';
-import { getColorCode } from '../../shared/utils/getColorCode';
-import { SentimentColors } from '../../shared/contants/Colors';
-import type {
-  EntityTrend,
-  EntityTrendsChartData,
-} from '../../shared/interfaces/EntityTrend';
-import axios from 'axios';
-import { aggregateEntities } from '../../shared/utils/aggregateData';
-const API_URL = 'http://localhost:8081/api';
+import { getColorCode } from '../../../shared/utils/getColorCode';
+import { SentimentColors } from '../../../shared/contants/Colors';
+import type { EntityTrendsChartData } from '../../../shared/interfaces/EntityTrend';
+import { fetchGlobalEntityTrends } from '../../../services/analysisService';
+import { aggregateEntities } from '../../../shared/utils/aggregateData';
 
 const getColor = (val) => {
   if (val <= -0.6) return getColorCode(SentimentColors.crisis);
@@ -64,20 +60,13 @@ const EntityTrendsChart = () => {
   const fetchEntityTrends = useCallback(
     async (intervalUnit: string, amount: number) => {
       try {
-        const response = await axios.get<EntityTrend>(
-          `${API_URL}/news/global_entity_trends`,
-          {
-            params: {
-              intervalUnit,
-              amount,
-            },
-          },
-        );
-        const result: EntityTrend = response.data;
-        const chartData = [
-          { name: 'Top Entities', children: aggregateEntities(result) },
-        ];
-        setEntityTrend(chartData);
+        const result = await fetchGlobalEntityTrends(intervalUnit, amount);
+        if (result) {
+          const chartData = [
+            { name: 'Top Entities', children: aggregateEntities(result) },
+          ];
+          setEntityTrend(chartData);
+        }
       } catch (error) {
         console.error('Error fetching news:', error);
       }

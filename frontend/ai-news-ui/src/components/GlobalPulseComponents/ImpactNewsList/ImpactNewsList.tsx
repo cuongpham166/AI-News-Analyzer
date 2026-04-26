@@ -9,13 +9,13 @@ import {
   Group,
   ActionIcon,
 } from '@mantine/core';
-import axios from 'axios';
-import { getColorCode } from '../../shared/utils/getColorCode';
-import { SentimentColors, ThemeColors } from '../../shared/contants/Colors';
-import type { ImpactNews } from '../../shared/interfaces/ImpactNews';
-import { PlusIcon } from '@phosphor-icons/react';
 
-const API_URL = 'http://localhost:8081/api';
+import { PlusIcon } from '@phosphor-icons/react';
+import type { ImpactNews } from '../../../shared/interfaces/ImpactNews';
+import { fetchImpactNews } from '../../../services/analysisService';
+import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
+import { getColorCode } from '../../../shared/utils/getColorCode';
+
 const options = {
   weekday: 'long',
   year: 'numeric',
@@ -39,23 +39,13 @@ const ImpactNewsList = (props: ImpactNewsListProps) => {
       topN: number,
       isPositive: boolean,
     ) => {
-      try {
-        const response = await axios.get<ImpactNews[]>(
-          `${API_URL}/news/impact_articles`,
-          {
-            params: {
-              intervalUnit,
-              amount,
-              topN,
-              isPositive,
-            },
-          },
-        );
-
-        setNews(response.data);
-      } catch (error) {
-        console.error('Error fetching news:', error);
-      }
+      const result = await fetchImpactNews(
+        intervalUnit,
+        amount,
+        topN,
+        isPositive,
+      );
+      if (result) setNews(result);
     },
     [],
   );
@@ -68,7 +58,7 @@ const ImpactNewsList = (props: ImpactNewsListProps) => {
   }, [sentiment, fetchNews]);
 
   return (
-    <Paper p='sm' style={{ flex: 1 }}>
+    <Paper p='sm' style={{ flex: 1, background: ThemeColors.third }}>
       <Stack>
         <Group justify='space-between' align='center'>
           <Badge
@@ -88,7 +78,13 @@ const ImpactNewsList = (props: ImpactNewsListProps) => {
             radius='sm'
             aria-label='Settings'
           >
-            <PlusIcon style={{ width: '70%', height: '70%' }} />
+            <PlusIcon
+              style={{
+                width: '70%',
+                height: '70%',
+                color: ThemeColors.third,
+              }}
+            />
           </ActionIcon>
         </Group>
 
@@ -101,12 +97,20 @@ const ImpactNewsList = (props: ImpactNewsListProps) => {
                 padding='sm'
                 withBorder
                 key={article.link}
-                style={{ background: ThemeColors.secondary }}
+                style={{
+                  background: ThemeColors.third,
+                  borderColor: ThemeColors.primary,
+                }}
               >
-                <Text size='sm' fw={500} lineClamp={2}>
+                <Text
+                  size='sm'
+                  fw={600}
+                  lineClamp={2}
+                  color={ThemeColors.primary}
+                >
                   {article.title}
                 </Text>
-                <Text size='xs'>
+                <Text size='xs' color={ThemeColors.primary}>
                   {publishDate.toLocaleDateString(undefined, options)}
                 </Text>
               </Card>

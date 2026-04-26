@@ -17,7 +17,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <AppShell
-      navbar={{ width: 250, breakpoint: 'sm' }}
+      navbar={{ width: 270, breakpoint: 'sm' }}
       padding='md'
       // Force the Shell to be exactly the height of the window
       styles={{
@@ -26,13 +26,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           height: '100vh',
           display: 'flex',
           overflow: 'hidden',
-          backgroundColor: ThemeColors.secondary,
+          backgroundColor: ThemeColors.primaryBackground,
         },
       }}
     >
       <AppShell.Navbar
         p='lg'
-        style={{ backgroundColor: ThemeColors.primary, border: 'none' }}
+        style={{
+          backgroundColor: ThemeColors.primary,
+          border: 'none',
+        }}
       >
         <Sidebar />
       </AppShell.Navbar>

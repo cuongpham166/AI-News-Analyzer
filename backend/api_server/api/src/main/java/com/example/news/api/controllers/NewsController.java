@@ -5,22 +5,22 @@ import java.sql.*;
 
 import org.springframework.web.bind.annotation.*;
 import com.example.dto.NewsDTO;
-import com.example.service.ServerDbBridge;
+import com.example.service.MetaDataService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/news")
 public class NewsController {
-    private final ServerDbBridge bridgeClient;
+    private final MetaDataService metadataService;
     public NewsController() {
-        this.bridgeClient = new ServerDbBridge();
+        this.metadataService = new MetaDataService();
     }
 
     @GetMapping("/all")
     public List<NewsDTO> getAllNews(
         @RequestParam(required = false, defaultValue = "10") int limit
     ) throws SQLException {
-        List<NewsDTO> newsList = this.bridgeClient.getAllNews(limit);
+        List<NewsDTO> newsList = this.metadataService.getAllNews(limit);
         return newsList;
     }
 
@@ -28,7 +28,7 @@ public class NewsController {
     public NewsDTO getNewsByLink(
         @PathVariable String link
     ) throws SQLException {
-        NewsDTO foundNews = this.bridgeClient.getNewsByLink(link);
+        NewsDTO foundNews = this.metadataService.getNewsByLink(link);
         return foundNews;
     }
 

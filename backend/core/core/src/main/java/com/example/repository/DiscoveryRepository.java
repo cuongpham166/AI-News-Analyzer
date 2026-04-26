@@ -1,26 +1,16 @@
-package com.example.service;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package com.example.repository;
 
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.QueryConfig;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 import com.example.utils.Neo4jQuery;
 
+import io.github.cdimascio.dotenv.Dotenv;
 
-public class Neo4jClient {
-    private final Dotenv dotenv = Dotenv.configure().directory("../../").load();
+public class DiscoveryRepository {
+   private final Dotenv dotenv = Dotenv.configure().directory("../../").load();
     private final String neo4jUri = this.dotenv.get("NEO4J_URI");
     private final String neo4jUser = this.dotenv.get("NEO4J_USER");
     private final String neo4jPassword = this.dotenv.get("NEO4J_PASSWORD");
@@ -29,7 +19,7 @@ public class Neo4jClient {
     private final Neo4jQuery neo4jQuery;
 
 
-    public Neo4jClient(){
+    public DiscoveryRepository(){
         this.driver = GraphDatabase.driver(this.neo4jUri, AuthTokens.basic(this.neo4jUser, this.neo4jPassword));
         this.neo4jQuery = new Neo4jQuery();
     }
@@ -61,11 +51,11 @@ public class Neo4jClient {
     }
     
     public static void main(String... args) {
-        Neo4jClient neo4jClient = new Neo4jClient();
+        DiscoveryRepository discoveryRepo = new DiscoveryRepository();
         try {
-            neo4jClient.createInitConstraints();
+            discoveryRepo.createInitConstraints();
         } finally {
-            neo4jClient.close(); 
+            discoveryRepo.close(); 
         }
     }
 }

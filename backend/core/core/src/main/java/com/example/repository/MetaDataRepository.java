@@ -1,4 +1,4 @@
-package com.example.service;
+package com.example.repository;
 
 import java.sql.*;
 
@@ -19,13 +19,13 @@ import com.example.utils.AggregationQuery;
 import com.example.utils.AggregationInterval;
 import com.example.utils.Neo4jQuery;
 
-import com.example.service.Neo4jClient;
+import com.example.repository.DiscoveryRepository;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Values;
 import io.github.cdimascio.dotenv.Dotenv;
 
-public class PostgresClient {
+public class MetaDataRepository {
     private final Dotenv dotenv = Dotenv.configure().directory("../../").load();
     private final String url = this.dotenv.get("POSTGRES_JAVA_URL");
     private final String user = this.dotenv.get("POSTGRES_USER");
@@ -34,16 +34,16 @@ public class PostgresClient {
     private final AggregationMapping aggMapping;
     private final AggregationQuery aggQuery;
     private final Neo4jQuery neo4jQuery;
-    private final Neo4jClient neo4jClient;
+    private final DiscoveryRepository discoveryRepo;
 
-    public PostgresClient() throws SQLException {
+    public MetaDataRepository() throws SQLException {
         this.postgresClient = DriverManager.getConnection(this.url, this.user, this.password);
         this.aggMapping = new AggregationMapping();
         this.aggQuery = new AggregationQuery();
         this.neo4jQuery = new Neo4jQuery();
-        this.neo4jClient = new Neo4jClient();
+        this.discoveryRepo = new DiscoveryRepository();
     }
-
+    
     public List<NewsDTO> getAllNews(int limit) throws SQLException {
         List<NewsDTO> newsList = new ArrayList<>();
         String sql = aggQuery.getAllNewsQuery(limit);
@@ -167,7 +167,7 @@ public class PostgresClient {
             }
         }
 
-        Driver neo4jDriver = this.neo4jClient.getDriver();
+        Driver neo4jDriver = this.discoveryRepo.getDriver();
         try (Session session = neo4jDriver.session()) {
             for(NewsDTO news : newsList){
                 if (news.getTopic_name() != null && !news.getTopic_name().trim().isEmpty()) {           
@@ -207,7 +207,7 @@ public class PostgresClient {
             }
         }       
         
-        Driver neo4jDriver = this.neo4jClient.getDriver();
+        Driver neo4jDriver = this.discoveryRepo.getDriver();
         try (Session session = neo4jDriver.session()) { 
             for (Neo4jEntityDTO newsEntity : newsEntitiesList){
                 Map<String, Object> params = new HashMap<>();
@@ -220,14 +220,5 @@ public class PostgresClient {
                 });  
             }
         }
-    }
-
-    public static void main(String[] args) throws SQLException {
-        PostgresClient postgresClient = new PostgresClient();
-        List<NewsDTO> foundNewsList = postgresClient.getAllNews(1);
-        List<SpatialMapDTO> result = postgresClient.getSpatialMapWithRelativeInterval("month",5);
-        List<PowerCoupleDTO> powerCoupleResult = postgresClient.getPowerCoupleWithRelativeInterval("month",5);
-        
-        postgresClient.syncNewsEntityToNeo4j();
     }
 }

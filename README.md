@@ -54,7 +54,7 @@ A scalable, event-driven AI platform that collects news from RSS feeds, enriches
 
 ### Architecture Overview
 
-![Overview Structure](/images/Final_Structure_v2.png)
+![Overview Structure](/images/Structure_v3.png)
 
 ### Database Overview
 

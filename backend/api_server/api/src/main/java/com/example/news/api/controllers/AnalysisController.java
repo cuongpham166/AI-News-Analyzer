@@ -12,16 +12,18 @@ import com.example.dto.InferenceNews;
 import com.example.dto.PowerCoupleDTO;
 import com.example.dto.SpatialMapDTO;
 import com.example.dto.VolatilityIndexDTO;
-import com.example.service.ServerDbBridge;
+import com.example.service.SearchService;
+import com.example.service.MetaDataService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/analysis")
 public class AnalysisController {
-
-    private final ServerDbBridge bridgeClient;
+    private final SearchService searchService;
+    private final MetaDataService metadatService;
     public AnalysisController() {
-        this.bridgeClient = new ServerDbBridge();
+        this.searchService = new SearchService();
+        this.metadatService = new MetaDataService();
     }
 
     @GetMapping("/global_trends")
@@ -29,7 +31,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     ) throws IOException {
-        GlobalTrendsDTO trendResult = this.bridgeClient.getGlobalTrendsWithRelativeInterval(intervalUnit,amount);
+        GlobalTrendsDTO trendResult = this.searchService.getGlobalTrendsWithRelativeInterval(intervalUnit,amount);
         return trendResult;
     }
 
@@ -38,7 +40,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws IOException {
-        GlobalEntityTrendsDTO trendResult = this.bridgeClient.getGlobalEntityWithRelativeInterval(intervalUnit,amount);
+        GlobalEntityTrendsDTO trendResult = this.searchService.getGlobalEntityWithRelativeInterval(intervalUnit,amount);
         return trendResult;
     }
 
@@ -49,7 +51,7 @@ public class AnalysisController {
         @RequestParam int topN, 
         @RequestParam boolean isPositive
     ) throws IOException{
-        List<InferenceNews> newsResult = this.bridgeClient.getImpactArticlesWithRelativeInterval(intervalUnit,amount,topN,isPositive);
+        List<InferenceNews> newsResult = this.searchService.getImpactArticlesWithRelativeInterval(intervalUnit,amount,topN,isPositive);
         return newsResult;        
     }
 
@@ -58,7 +60,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List<SpatialMapDTO> result = this.bridgeClient.getSpatialMapWithRelativeInterval(intervalUnit, amount);
+        List<SpatialMapDTO> result = this.metadatService.getSpatialMapWithRelativeInterval(intervalUnit, amount);
         return result;
     }
 
@@ -67,7 +69,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List<PowerCoupleDTO> result = this.bridgeClient.getPowerCoupleWithRelativeInterval(intervalUnit, amount);
+        List<PowerCoupleDTO> result = this.metadatService.getPowerCoupleWithRelativeInterval(intervalUnit, amount);
         return result;
     }
 
@@ -76,7 +78,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List <EventTrackerDTO> result = this.bridgeClient.getEventTrackerWithRelativeInterval(intervalUnit, amount);
+        List <EventTrackerDTO> result = this.metadatService.getEventTrackerWithRelativeInterval(intervalUnit, amount);
         return result;
     }
 
@@ -85,7 +87,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List <VolatilityIndexDTO> result = this.bridgeClient.getVolatilityIndexWithRelativeInterval(intervalUnit, amount);
+        List <VolatilityIndexDTO> result = this.metadatService.getVolatilityIndexWithRelativeInterval(intervalUnit, amount);
         return result;
     }
 }

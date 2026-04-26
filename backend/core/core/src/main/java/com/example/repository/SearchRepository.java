@@ -1,5 +1,4 @@
-package com.example.service;
-
+package com.example.repository;
 
 import org.apache.http.HttpHost;
 import java.io.IOException;
@@ -13,10 +12,7 @@ import org.elasticsearch.client.RestClient;
 
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.core.*;
-import co.elastic.clients.elasticsearch._types.query_dsl.*;
-import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.CalendarInterval; 
-import co.elastic.clients.json.JsonData;
 
 import com.example.dto.InferenceNews;
 import com.example.dto.TopRadarDTO;
@@ -24,12 +20,11 @@ import com.example.dto.GlobalTrendsDTO;
 import com.example.dto.GlobalEntityTrendsDTO;
 
 import com.example.utils.AggregationInterval;
-import com.example.utils.AggregationData;
 import com.example.utils.AggregationMapping;
 import com.example.utils.AggregationRequest;
 import io.github.cdimascio.dotenv.Dotenv;
 
-public class ElasticClient {
+public class SearchRepository {
     private final Dotenv dotenv = Dotenv.configure().directory("../../").load();
     private final String serverUrl = this.dotenv.get("ELASTIC_URL");
 
@@ -39,12 +34,12 @@ public class ElasticClient {
     private final AggregationMapping aggMapping;
     private final AggregationRequest aggRequest;
 
-    public ElasticClient() {
+    public SearchRepository(){
         this.restClient = RestClient.builder(HttpHost.create(this.serverUrl)).build();
         this.transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
         this.esClient = new ElasticsearchClient(this.transport);
         this.aggMapping = new AggregationMapping();
-        this.aggRequest = new AggregationRequest();
+        this.aggRequest = new AggregationRequest();        
     }
 
     public InferenceNews getInferenceNewsById(String id) throws IOException {
@@ -138,20 +133,5 @@ public class ElasticClient {
         SearchRequest searchRequest = aggRequest.getTopicRadarRequest(startEpoch,endEpoch);
         SearchResponse<Void> response = esClient.search(searchRequest, Void.class);
         return response;
-    }
-
-    public static void main(String[] args) throws IOException {
-        ElasticClient esClient = new ElasticClient();
-
-        GlobalTrendsDTO trendsResult = esClient.getGlobalTrendsWithRelativeInterval("week",1);
-        //System.out.println("Global Trends: " + trendsResult);
-        //System.out.println("---------------------------------------------------------------------");
-        GlobalEntityTrendsDTO entityTrendsResult = esClient.getGlobalEntityWithRelativeInterval("week",2);
-        //System.out.println("Global Entity Trends: " + entityTrendsResult);
-        List<InferenceNews> allPositveImpactNews = esClient.getImpactArticlesWithRelativeInterval("week",2,3,true);
-        //System.out.println("Positive Impact News: " + allPositveImpactNews);
-        List<InferenceNews> allNegativeImpactNews = esClient.getImpactArticlesWithRelativeInterval("week",2,3,false);
-        //System.out.println("Negative Impact News: " + allNegativeImpactNews);
-        
     }
 }

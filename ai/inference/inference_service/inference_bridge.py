@@ -42,6 +42,12 @@ class InferenceBridge:
 
 
     async def retrieve_enriched_articles(self):
+
+        try:
+            await self.js.delete_consumer(STREAM_NAME, "enriched-articles-consumer-1")
+        except Exception:
+            pass
+
         sub = await self.js.subscribe(ENRICHED_SUBJECT, durable="enriched-articles-consumer-1",deliver_policy="new",manual_ack=True)
         print(f"Subscribed to {ENRICHED_SUBJECT}. Waiting for messages...")
         async for msg in sub.messages:

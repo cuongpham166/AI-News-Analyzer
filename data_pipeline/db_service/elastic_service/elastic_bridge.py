@@ -34,7 +34,7 @@ class ElasticBridge:
             await msg.term()
 
     async def retrieve_ai_articles(self):
-        sub = await self.js.subscribe(AI_SUBJECT, durable="ai-articles-consumer-2",deliver_policy="new",manual_ack=True)
+        sub = await self.js.subscribe(AI_SUBJECT, durable="ai-articles-consumer-elastic",deliver_policy="new",manual_ack=True)
         print(f"Subscribed to {AI_SUBJECT}. Waiting for messages...")
         async for msg in sub.messages:
             await self.process_ai_message(msg)

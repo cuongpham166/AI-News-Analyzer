@@ -195,8 +195,13 @@ class PostgresLayer:
             with open(sql_file, "r") as f:
                 sql = f.read()
             with self.conn.cursor() as cur:
-                #summary=%s, sentiment_label=%s, sentiment=%s, topic_id
-                cur.execute(sql,(updated_data["summary"], updated_data["sentiment_label"], updated_data["sentiment"], updated_data["topic"],updated_data["link"]))
+                cur.execute(sql, (
+                    updated_data["link"],           
+                    updated_data["summary"],        
+                    updated_data["sentiment_label"],
+                    updated_data["sentiment"],     
+                    updated_data["topic"]           
+                ))
             self.conn.commit()
 
             entities_list = [entity["value"] for entity in updated_data["entities"]]
@@ -229,3 +234,13 @@ class PostgresLayer:
         with self.conn.cursor() as cur:
             cur.execute(sql)
             return cur.fetchall()
+        
+    def fetch_missing_data(self):
+        sql_file = root_folder+"get_missing_data_news.sql"
+        with open(sql_file, "r") as f:
+            sql = f.read()
+            
+        with self.conn.cursor() as cur:
+            cur.execute(sql)
+            return cur.fetchall()
+

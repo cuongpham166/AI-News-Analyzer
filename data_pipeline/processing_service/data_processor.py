@@ -27,6 +27,7 @@ class DataProcessor:
         self.enriched_links = set()  # deduplication
 
     async def publish_article(self, article: dict):
+        print("publish_article", article)
         await self.js.publish(
             ENRICHED_SUBJECT, 
             json.dumps(article).encode()

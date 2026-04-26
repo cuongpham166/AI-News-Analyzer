@@ -8,7 +8,7 @@ import hashlib
 import json
 import asyncio
 import random
-
+import aiohttp
 from nats.aio.client import Client as NATS
 import nats 
 
@@ -22,58 +22,68 @@ RAW_SUBJECT = "articles.raw"
 ENRICHED_SUBJECT = "articles.enriched"
 
 class RssScraper:
-    def __init__(self, rss_url, js=None):
-        self.rss_url = rss_url
+    def __init__(self, rss_urls, js=None, poll_interval=300):
+        self.rss_urls = rss_urls
         self.js = js
         self.seen_links = set()
+        self.poll_interval = poll_interval
 
 
     async def publish_article(self, article: dict):
         try:
             await asyncio.wait_for(
-                self.js.publish(
-                    RAW_SUBJECT,
-                    json.dumps(article).encode()
-                ),
+                self.js.publish(RAW_SUBJECT,json.dumps(article).encode()),
                 timeout=10
             )
         except asyncio.TimeoutError:
             print(f"Publish timeout: {article.get('link')}")
 
-    async def scrap_article(self):
-        for news_url in self.rss_url:
-            feed = feedparser.parse(news_url)
+    async def fetch_feed(self, session, url):
+        try:
+            async with session.get(url, timeout=10) as resp:
+                resp.raise_for_status()
+                content = await resp.read()
+                return feedparser.parse(content)
+        except Exception as e:
+            print(f"Error fetching {url}: {e}")
+            return None
+        
+    async def scrape_once(self):
+        async with aiohttp.ClientSession() as session:
+            tasks = [self.fetch_feed(session, url) for url in self.rss_urls]
+            feeds = await asyncio.gather(*tasks, return_exceptions=True)
 
+        new_articles = 0
+        for feed in feeds:
+            if not feed or isinstance(feed, Exception):
+                continue
             for entry in feed.entries:
                 link = getattr(entry, "link", "")
                 if not link or link in self.seen_links:
                     continue
-
                 self.seen_links.add(link)
-
-                raw_date = getattr(entry, "published", "")
                 article_dict = {
                     "title": getattr(entry, "title", ""),
                     "link": link,
                     "summary": getattr(entry, "summary", ""),
-                    "rss_pub_date": raw_date
+                    "rss_pub_date": getattr(entry, "published", "")
                 }
                 await self.publish_article(article_dict)
-
-                #important for inference stability
-                await asyncio.sleep(2)
-
                 print(f"Published raw article: {link}")
+                new_articles += 1
+        return new_articles
 
-    async def run_periodically(self):
+    async def run_continuously(self):
+        print("Starting continuous RSS scraping...")
         while True:
             try:
-                await self.scrap_article()
+                new_articles = await self.scrape_once()
+                if new_articles:
+                    print(f"Scraped {new_articles} new articles.")
             except Exception as e:
                 print(f"RSS scraper error: {e}")
-            wait_time = 6 * 60 * 60
-            print(f"RSS scraper sleeping {wait_time}s\n")
-            await asyncio.sleep(wait_time)
+
+            await asyncio.sleep(self.poll_interval)
 
 
 async def ensure_stream(js):
@@ -108,9 +118,10 @@ async def main():
         "https://news.un.org/feed/subscribe/en/news/topic/peace-and-security/feed/rss.xml",
         "https://news.un.org/feed/subscribe/en/news/topic/migrants-and-refugees/feed/rss.xml",
         "https://news.un.org/feed/subscribe/en/news/topic/sdgs/feed/rss.xml",
+        "https://rss.dw.com/rdf/rss-en-all"
     ]
-    scraper = RssScraper(rss_arr, js)
-    await scraper.run_periodically()
+    scraper = RssScraper(rss_arr, js, poll_interval=300)  # 5 min polling
+    await scraper.run_continuously()
 
 if __name__ == "__main__":
     asyncio.run(main())

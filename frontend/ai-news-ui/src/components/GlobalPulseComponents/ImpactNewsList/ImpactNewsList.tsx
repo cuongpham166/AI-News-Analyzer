@@ -15,7 +15,7 @@ import type { ImpactNews } from '../../../shared/interfaces/ImpactNews';
 import { fetchImpactNews } from '../../../services/analysisService';
 import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
 import { getColorCode } from '../../../shared/utils/getColorCode';
-
+import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
 const options = {
   weekday: 'long',
   year: 'numeric',
@@ -28,9 +28,10 @@ interface ImpactNewsListProps {
 }
 
 const ImpactNewsList = (props: ImpactNewsListProps) => {
-  const [loading, setLoading] = useState<boolean>(true);
   const { sentiment } = props;
+  const [loading, setLoading] = useState<boolean>(true);
   const [news, setNews] = useState<ImpactNews[]>([]);
+  const { globalPulseInterval } = useGlobalPulse();
 
   const fetchNews = useCallback(
     async (
@@ -52,10 +53,15 @@ const ImpactNewsList = (props: ImpactNewsListProps) => {
 
   useEffect(() => {
     const loadNews = async () => {
-      await fetchNews('day', 7, 3, sentiment === 'positive');
+      await fetchNews(
+        globalPulseInterval.intervalUnit,
+        globalPulseInterval.amount,
+        3,
+        sentiment === 'positive',
+      );
     };
     loadNews();
-  }, [sentiment, fetchNews]);
+  }, [sentiment, fetchNews, globalPulseInterval]);
 
   return (
     <Paper p='sm' style={{ flex: 1, background: ThemeColors.third }}>

@@ -1,24 +1,56 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
-
+import { useState, useContext } from 'react';
+import { GlobalPulseContext } from '../../../shared/contexts/global_pulse/GlobalPulseContext';
 import {
   ActionIcon,
   Autocomplete,
   NumberInput,
-  Grid,
   NativeSelect,
   Paper,
   Title,
   Button,
   Group,
 } from '@mantine/core';
-import {
-  ArrowRightIcon,
-  SlidersHorizontalIcon,
-  UserCircleIcon,
-} from '@phosphor-icons/react';
+import { ArrowRightIcon, UserCircleIcon } from '@phosphor-icons/react';
 import { ThemeColors } from '../../../shared/contants/Colors';
-function HomeTaskbar() {
+import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
+type Props = {};
+
+const GlobalPulseTaskbar: React.FC<Props> = (props) => {
+  const [intervalUnit, setIntervalUnit] = useState<string>('month');
+  const [intervalAmount, setIntervalAmount] = useState<number>(6);
+  const { globalPulseInterval, setGlobalPulseInterval } = useGlobalPulse();
+
+  const onChangeNumberInterval = (value) => {
+    setIntervalAmount(parseInt(value));
+  };
+
+  const onChangeTypeInterval = (value) => {
+    switch (value) {
+      case 'Days ago':
+        setIntervalUnit('day');
+        break;
+      case 'Weeks ago':
+        setIntervalUnit('week');
+        break;
+      case 'Months ago':
+        setIntervalUnit('month');
+        break;
+      case 'Years ago':
+        setIntervalUnit('year');
+        break;
+      default:
+        break;
+    }
+  };
+
+  const onChangeGlobalPulseInterval = () => {
+    setGlobalPulseInterval({
+      ...globalPulseInterval,
+      ...{ intervalUnit: intervalUnit, amount: intervalAmount },
+    });
+  };
+
   return (
     <Paper p='md' style={{ background: ThemeColors.third }}>
       <Group align='center' gap='lg' style={{ width: '100%' }}>
@@ -48,16 +80,21 @@ function HomeTaskbar() {
           <Group gap='sm' align='center'>
             <NumberInput
               name='time_value'
-              defaultValue={1}
+              defaultValue={6}
               min={1}
               max={10}
               style={{ width: 80 }}
+              onChange={(value) => onChangeNumberInterval(value)}
             />
             <NativeSelect
               variant='filled'
               radius='sm'
               data={['Days ago', 'Weeks ago', 'Months ago', 'Years ago']}
+              defaultValue='Months ago'
               style={{ minWidth: 120 }}
+              onChange={(event) =>
+                onChangeTypeInterval(event.currentTarget.value)
+              }
             />
             <Button
               variant='filled'
@@ -72,6 +109,7 @@ function HomeTaskbar() {
                   },
                 },
               }}
+              onClick={onChangeGlobalPulseInterval}
             >
               Update
             </Button>
@@ -90,6 +128,6 @@ function HomeTaskbar() {
       </Group>
     </Paper>
   );
-}
+};
 
-export default HomeTaskbar;
+export default GlobalPulseTaskbar;

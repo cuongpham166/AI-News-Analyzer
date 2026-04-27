@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import {
   Area,
   CartesianGrid,
@@ -16,10 +16,12 @@ import type { GlobalTrend } from '../../../shared/interfaces/GlobalTrend';
 import { fetchGlobalTrends } from '../../../services/analysisService';
 import { getColorCode } from '../../../shared/utils/getColorCode';
 import { TrendColors } from '../../../shared/contants/Colors';
+import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
 
 const GlobalTrendsChart = () => {
   const [globalTrends, setGlobalTrends] = useState<GlobalTrend[]>([]);
   const [topics, setTopics] = useState<string[]>([]);
+  const { globalPulseInterval } = useGlobalPulse();
 
   const fetchGlobalTrendsData = useCallback(
     async (intervalUnit: string, amount: number) => {
@@ -52,10 +54,13 @@ const GlobalTrendsChart = () => {
 
   useEffect(() => {
     const loadGlobalTrends = async () => {
-      await fetchGlobalTrendsData('month', 1);
+      await fetchGlobalTrendsData(
+        globalPulseInterval.intervalUnit,
+        globalPulseInterval.amount,
+      );
     };
     loadGlobalTrends();
-  }, [fetchGlobalTrendsData]);
+  }, [fetchGlobalTrendsData, globalPulseInterval]);
 
   return (
     <ResponsiveContainer width='100%' height='95%' minHeight={300}>

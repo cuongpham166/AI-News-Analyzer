@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Grid, Stack } from '@mantine/core';
-import HomeTaskbar from '../components/GlobalPulseComponents/HomeTaskbar';
+import GlobalPulseTaskbar from '../components/GlobalPulseComponents/GlobalPulseTaskbar';
 import GlobalTrendsCard from '../components/GlobalPulseComponents/GlobalTrendsCard';
 import EntityTrendsCard from '../components/GlobalPulseComponents/EntityTrendsCard';
 import ImpactNewsList from '../components/GlobalPulseComponents/ImpactNewsList';
@@ -7,7 +8,7 @@ import ImpactNewsList from '../components/GlobalPulseComponents/ImpactNewsList';
 function GlobalPulsePage() {
   return (
     <Stack>
-      <HomeTaskbar />
+      <GlobalPulseTaskbar />
       <Grid gap='md'>
         <Grid.Col span={8}>
           <Stack gap='md'>

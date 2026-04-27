@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import { Stack, Text, Button, NavLink, Group } from '@mantine/core';
 import {
   GaugeIcon,
@@ -16,15 +16,24 @@ import {
 import { ThemeColors } from '../../shared/contants/Colors';
 function Sidebar() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const data = [
-    { icon: GaugeIcon, label: 'Global Pulse' },
-    { icon: VectorThreeIcon, label: 'Dimensions & Risks' },
-    { icon: TreeStructureIcon, label: 'Relationship' },
+  const navigate = useNavigate();
+  const menuData = [
+    { icon: GaugeIcon, label: 'Global Pulse', url: '/' },
+    { icon: VectorThreeIcon, label: 'Dimensions & Risks', url: '/dimension' },
+    { icon: TreeStructureIcon, label: 'Relationship', url: '/relationship' },
     { icon: MagnifyingGlassIcon, label: 'Discovery' },
     { icon: NewspaperIcon, label: 'News' },
     { icon: HeartbeatIcon, label: 'Activity' },
     { icon: UserIcon, label: 'Profile' },
   ];
+
+  const onMenuClick = (event) => {
+    const menuTitle = event.target.innerText;
+    const foundItem = menuData.filter((menu) => menu.label == menuTitle);
+    const url = foundItem[0]['url'];
+    navigate(url);
+  };
+
   return (
     <Stack justify='space-between' style={{ height: '100%' }}>
       <Group gap='xs' justify='center' align='center' style={{ width: '100%' }}>
@@ -39,8 +48,7 @@ function Sidebar() {
       </Group>
 
       <Stack gap='lg'>
-        {data.map((item, index) => {
-          const IconComponent = item.icon;
+        {menuData.map((item, index) => {
           const isHovered = hoveredIndex === index;
           return (
             <NavLink
@@ -57,6 +65,7 @@ function Sidebar() {
               }
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
+              onClick={(event) => onMenuClick(event)}
               styles={(theme) => ({
                 label: {
                   color: isHovered

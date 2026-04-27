@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { Tooltip, ResponsiveContainer, Treemap } from 'recharts';
 import {
   Divider,
@@ -12,7 +12,8 @@ import { SentimentColors } from '../../../shared/contants/Colors';
 import type { EntityTrendsChartData } from '../../../shared/interfaces/EntityTrend';
 import { fetchGlobalEntityTrends } from '../../../services/analysisService';
 import { aggregateEntities } from '../../../shared/utils/aggregateData';
-
+import { GlobalPulseContext } from '../../../shared/contexts/global_pulse/GlobalPulseContext';
+import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
 const getColor = (val) => {
   if (val <= -0.6) return getColorCode(SentimentColors.crisis);
   if (val < -0.1) return getColorCode(SentimentColors.negative);
@@ -56,6 +57,7 @@ const CustomizedContent = (props) => {
 
 const EntityTrendsChart = () => {
   const [entityTrend, setEntityTrend] = useState<EntityTrendsChartData[]>([]);
+  const { globalPulseInterval } = useGlobalPulse();
 
   const fetchEntityTrends = useCallback(
     async (intervalUnit: string, amount: number) => {
@@ -76,10 +78,13 @@ const EntityTrendsChart = () => {
 
   useEffect(() => {
     const loadEntityTrends = async () => {
-      await fetchEntityTrends('day', 7);
+      await fetchEntityTrends(
+        globalPulseInterval.intervalUnit,
+        globalPulseInterval.amount,
+      );
     };
     loadEntityTrends();
-  }, [fetchEntityTrends]);
+  }, [fetchEntityTrends, globalPulseInterval]);
 
   return (
     <ResponsiveContainer width='100%' height='95%' minHeight={300}>

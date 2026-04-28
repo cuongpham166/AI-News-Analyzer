@@ -11,7 +11,11 @@ import {
   Button,
   Group,
 } from '@mantine/core';
-import { ArrowRightIcon, UserCircleIcon } from '@phosphor-icons/react';
+import {
+  ArrowRightIcon,
+  CaretDownIcon,
+  UserCircleIcon,
+} from '@phosphor-icons/react';
 import { ThemeColors } from '../../../shared/contants/Colors';
 import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
 type Props = {};
@@ -66,10 +70,18 @@ const GlobalPulseTaskbar: React.FC<Props> = (props) => {
           {/* Search section */}
           <Group gap='sm' align='center' style={{ flex: 2 }}>
             <NativeSelect
-              variant='filled'
+              variant=''
               radius='sm'
               data={['News', 'Topic', 'Entity']}
-              style={{ minWidth: 120 }}
+              rightSection={
+                <CaretDownIcon size={16} color={ThemeColors.primary} />
+              }
+              style={{
+                minWidth: 120,
+                background: ThemeColors.secondary,
+                color: ThemeColors.primary,
+                borderRadius: 'calc(0.5rem * 1)',
+              }}
             />
             <Autocomplete
               placeholder='Search'
@@ -89,11 +101,18 @@ const GlobalPulseTaskbar: React.FC<Props> = (props) => {
               onChange={(value) => onChangeNumberInterval(value)}
             />
             <NativeSelect
-              variant='filled'
-              radius='sm'
+              variant=''
               data={['Days ago', 'Weeks ago', 'Months ago', 'Years ago']}
               defaultValue='Months ago'
-              style={{ minWidth: 120 }}
+              rightSection={
+                <CaretDownIcon size={16} color={ThemeColors.primary} />
+              }
+              style={{
+                minWidth: 120,
+                background: ThemeColors.secondary,
+                color: ThemeColors.primary,
+                borderRadius: 'calc(0.5rem * 1)',
+              }}
               onChange={(event) =>
                 onChangeTypeInterval(event.currentTarget.value)
               }

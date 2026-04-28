@@ -61,6 +61,15 @@
                 <artifactId>neo4j-java-driver</artifactId>
                 <version>6.0.5</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq</artifactId>
+                <version>3.19.18</version>
+            </dependency>
     </dependencies>
 
     <build>
@@ -68,6 +77,40 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.19.18</version> <!-- Use latest stable -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jdbc>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>${env.POSTGRES_URL}</url>
+                        <user>${env.POSTGRES_USER}</user>
+                        <password>${env.POSTGRES_PASSWORD}</password>
+                    </jdbc>
+                    <generator>
+                        <database>
+                            <name>org.jooq.meta.postgres.PostgresDatabase</name> <!-- e.g. PostgresDatabase, MySQLDatabase -->
+                            <inputSchema>public</inputSchema> <!-- or your schema -->
+                        </database>
+                        <generate>
+                            <pojos>true</pojos>
+                            <daos>false</daos> <!-- set true if you want DAOs -->
+                        </generate>
+                        <target>
+                            <packageName>com.example.news.api.jooq</packageName>
+                            <directory>src/main/java</directory>
+                        </target>
+                    </generator>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -11,7 +11,8 @@ import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch._types.aggregations.DateHistogramBucket;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 
-import com.example.news.api.dto.*;
+import com.example.news.api.dto.analytics.*;
+import com.example.news.api.dto.jpa.NewsDTO;
 
 @Component
 public class AggregationMapping {
@@ -154,28 +155,6 @@ public class AggregationMapping {
         return news;
     }
 
-    public SpatialMapDTO mapDetailedSpatialMap(ResultSet rs) throws SQLException {
-        SpatialMapDTO spatialMap = new SpatialMapDTO();
-        spatialMap.setLocation(rs.getString("location"));
-        spatialMap.setCount(rs.getInt("count"));
-        return spatialMap;
-    }
-
-    public PowerCoupleDTO mapDetailedPowerCouple(ResultSet rs) throws SQLException {
-        PowerCoupleDTO powerCouple = new PowerCoupleDTO();
-        powerCouple.setPerson(rs.getString("person"));
-        powerCouple.setOrganization(rs.getString("organization"));
-        powerCouple.setStrength(rs.getInt("strength"));
-        return powerCouple;
-    }
-
-    public EventTrackerDTO mapDetailedMapTracker(ResultSet rs) throws SQLException {
-        EventTrackerDTO eventTracker = new EventTrackerDTO();
-        eventTracker.setEvent(rs.getString("event"));
-        eventTracker.setLocation(rs.getString("location"));
-        eventTracker.setStrength(rs.getInt("strength"));
-        return eventTracker;
-    }
 
     public VolatilityIndexDTO mapDetailedVolatilityIndex(ResultSet rs) throws SQLException {
         VolatilityIndexDTO volatilityIndex = new VolatilityIndexDTO();

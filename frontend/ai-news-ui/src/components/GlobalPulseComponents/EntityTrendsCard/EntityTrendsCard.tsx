@@ -38,9 +38,11 @@ function EntityTrendsCard() {
         </Box>
         <Group gap='md'>
           {entityTrendsLabels.map((label, index) => (
-            <Group gap='xs' key={index}>
+            <Group gap='5' key={index}>
               <ColorSwatch size={20} color={getColorCode(label.color)} />
-              <Text size='sm'>{label.title}</Text>
+              <Text size='sm' c={ThemeColors.primary} fw={600}>
+                {label.title}
+              </Text>
             </Group>
           ))}
         </Group>

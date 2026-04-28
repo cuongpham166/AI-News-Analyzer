@@ -5,21 +5,24 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.example.news.api.dto.*;
+import com.example.news.api.dto.analytics.EventTrackerDTO;
+import com.example.news.api.dto.analytics.GlobalEntityTrendsDTO;
+import com.example.news.api.dto.analytics.GlobalTrendsDTO;
+import com.example.news.api.dto.analytics.InferenceNews;
+import com.example.news.api.dto.analytics.PowerCoupleDTO;
+import com.example.news.api.dto.analytics.SpatialMapDTO;
+import com.example.news.api.dto.analytics.VolatilityIndexDTO;
 
-import com.example.news.api.service.SearchService;
-import com.example.news.api.service.MetaDataService;
+import com.example.news.api.service.AnalysisService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/analysis")
 public class AnalysisController {
-    private final SearchService searchService;
-    private final MetaDataService metadatService;
+    private final AnalysisService analysisService;
 
-    public AnalysisController(SearchService searchService, MetaDataService metadatService ) {
-        this.searchService = searchService;
-        this.metadatService = metadatService;
+    public AnalysisController(AnalysisService analysisService ) {
+        this.analysisService = analysisService;
     }
 
     @GetMapping("/global_trends")
@@ -27,7 +30,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     ) throws IOException {
-        GlobalTrendsDTO trendResult = this.searchService.getGlobalTrendsWithRelativeInterval(intervalUnit,amount);
+        GlobalTrendsDTO trendResult = this.analysisService.getGlobalTrendsWithRelativeInterval(intervalUnit,amount);
         return trendResult;
     }
 
@@ -36,7 +39,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws IOException {
-        GlobalEntityTrendsDTO trendResult = this.searchService.getGlobalEntityWithRelativeInterval(intervalUnit,amount);
+        GlobalEntityTrendsDTO trendResult = this.analysisService.getGlobalEntityWithRelativeInterval(intervalUnit,amount);
         return trendResult;
     }
 
@@ -47,7 +50,7 @@ public class AnalysisController {
         @RequestParam int topN, 
         @RequestParam boolean isPositive
     ) throws IOException{
-        List<InferenceNews> newsResult = this.searchService.getImpactArticlesWithRelativeInterval(intervalUnit,amount,topN,isPositive);
+        List<InferenceNews> newsResult = this.analysisService.getImpactArticlesWithRelativeInterval(intervalUnit,amount,topN,isPositive);
         return newsResult;        
     }
 
@@ -56,7 +59,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List<SpatialMapDTO> result = this.metadatService.getSpatialMapWithRelativeInterval(intervalUnit, amount);
+        List<SpatialMapDTO> result = this.analysisService.getSpatialMapWithRelativeInterval(intervalUnit, amount);
         return result;
     }
 
@@ -65,7 +68,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List<PowerCoupleDTO> result = this.metadatService.getPowerCoupleWithRelativeInterval(intervalUnit, amount);
+        List<PowerCoupleDTO> result = this.analysisService.getPowerCoupleWithRelativeInterval(intervalUnit, amount);
         return result;
     }
 
@@ -74,7 +77,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List <EventTrackerDTO> result = this.metadatService.getEventTrackerWithRelativeInterval(intervalUnit, amount);
+        List <EventTrackerDTO> result = this.analysisService.getEventTrackerWithRelativeInterval(intervalUnit, amount);
         return result;
     }
 
@@ -83,7 +86,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List <VolatilityIndexDTO> result = this.metadatService.getVolatilityIndexWithRelativeInterval(intervalUnit, amount);
+        List <VolatilityIndexDTO> result = this.analysisService.getVolatilityIndexWithRelativeInterval(intervalUnit, amount);
         return result;
     }
 }

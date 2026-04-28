@@ -6,7 +6,7 @@ import {
   GaugeIcon,
   HeartbeatIcon,
   MagnifyingGlassIcon,
-  RssSimpleIcon,
+  FileMagnifyingGlassIcon,
   SignOutIcon,
   UserIcon,
   TreeStructureIcon,
@@ -36,8 +36,12 @@ function Sidebar() {
 
   return (
     <Stack justify='space-between' style={{ height: '100%' }}>
-      <Group gap='xs' justify='center' align='center' style={{ width: '100%' }}>
-        <RssSimpleIcon size={40} color={ThemeColors.secondary} />
+      <Stack gap='0' justify='center' align='center' style={{ width: '100%' }}>
+        <FileMagnifyingGlassIcon
+          size={50}
+          color={ThemeColors.secondary}
+          weight='fill'
+        />
         <Text
           c={ThemeColors.secondary}
           size='xl'
@@ -45,7 +49,7 @@ function Sidebar() {
         >
           AI Analyzer
         </Text>
-      </Group>
+      </Stack>
 
       <Stack gap='lg'>
         {menuData.map((item, index) => {

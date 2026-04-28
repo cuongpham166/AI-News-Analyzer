@@ -31,7 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       }}
     >
       <AppShell.Navbar
-        p='lg'
+        p='70 25'
         style={{
           backgroundColor: ThemeColors.primary,
           border: 'none',

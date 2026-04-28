@@ -1,0 +1,19 @@
+spring:
+  postgres:
+    url: ${POSTGRES_URL}
+    host: ${POSTGRES_HOST}
+    port: ${POSTGRES_PORT}
+    dbname: ${POSTGRES_DBNAME}
+    authentication:
+      username: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+
+  neo4j:
+    uri: ${NEO4J_URI}
+    dbname: ${NEO4J_DB}
+    authentication:
+      username: ${NEO4J_USER}
+      password: ${NEO4J_PASSWORD}
+
+  elasticsearch:
+    uris: ${ELASTIC_URL}

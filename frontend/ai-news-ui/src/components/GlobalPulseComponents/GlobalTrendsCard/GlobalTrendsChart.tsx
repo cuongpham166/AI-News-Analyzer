@@ -15,7 +15,7 @@ import { Divider, Paper, Group, Text, Stack } from '@mantine/core';
 import type { GlobalTrend } from '../../../shared/interfaces/GlobalTrend';
 import { fetchGlobalTrends } from '../../../services/analysisService';
 import { getColorCode } from '../../../shared/utils/getColorCode';
-import { TrendColors } from '../../../shared/contants/Colors';
+import { ThemeColors, TrendColors } from '../../../shared/contants/Colors';
 import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
 
 const GlobalTrendsChart = () => {
@@ -77,14 +77,21 @@ const GlobalTrendsChart = () => {
             if (payload && payload[0]) {
               const { date, total, sentiment } = payload[0].payload;
               return (
-                <Paper p='sm' withBorder shadow='md'>
+                <Paper
+                  p='sm'
+                  withBorder
+                  style={{
+                    background: ThemeColors.third,
+                    borderColor: ThemeColors.primary,
+                  }}
+                >
                   <Stack gap='xs'>
-                    <Text fw={700} size='sm' c='blue'>
+                    <Text fw={700} size='md' c={ThemeColors.primary}>
                       {date}
                     </Text>
-                    <Divider my={4} />
+                    <Divider my={1} />
                     <Group gap='xs'>
-                      <Text size='sm' fw={700}>
+                      <Text size='sm' fw={500} c={ThemeColors.primary}>
                         Total Articles:
                       </Text>
                       <Text size='sm' fw={500}>
@@ -92,14 +99,14 @@ const GlobalTrendsChart = () => {
                       </Text>
                     </Group>
                     <Group gap='xs'>
-                      <Text size='sm' fw={700}>
+                      <Text size='sm' fw={500} c={ThemeColors.primary}>
                         Average Sentiment:
                       </Text>
                       <Text size='sm' fw={500}>
                         {sentiment.toFixed(2)}
                       </Text>
                     </Group>
-                    <Text size='sm' fw={700}>
+                    <Text size='sm' fw={500} c={ThemeColors.primary}>
                       Top Topics:
                     </Text>
                     {topics.map((topic, id) =>

@@ -11,6 +11,12 @@ import {
   Stack,
 } from '@mantine/core';
 
+const entityTrendsLabels = [
+  { title: 'Crisis', color: SentimentColors.crisis },
+  { title: 'Negative', color: SentimentColors.negative },
+  { title: 'Positive', color: SentimentColors.postive },
+  { title: 'Neutral', color: SentimentColors.neutral },
+];
 function EntityTrendsCard() {
   return (
     <Paper
@@ -30,37 +36,13 @@ function EntityTrendsCard() {
         <Box style={{ flex: 1, minHeight: 0 }}>
           <EntityTrendsChart />
         </Box>
-        <Group gap='sm'>
-          <Group gap='xs'>
-            <ColorSwatch
-              size={20}
-              color={getColorCode(SentimentColors.crisis)}
-            />
-            <Text size='sm'>Crisis</Text>
-          </Group>
-          <Group gap='xs'>
-            <ColorSwatch
-              size={20}
-              color={getColorCode(SentimentColors.negative)}
-            />
-            <Text size='sm'>Negative</Text>
-          </Group>
-
-          <Group gap='xs'>
-            <ColorSwatch
-              size={20}
-              color={getColorCode(SentimentColors.postive)}
-            />
-            <Text size='sm'>Positive</Text>
-          </Group>
-
-          <Group gap='xs'>
-            <ColorSwatch
-              size={20}
-              color={getColorCode(SentimentColors.neutral)}
-            />
-            <Text size='sm'>Neutral</Text>
-          </Group>
+        <Group gap='md'>
+          {entityTrendsLabels.map((label, index) => (
+            <Group gap='xs' key={index}>
+              <ColorSwatch size={20} color={getColorCode(label.color)} />
+              <Text size='sm'>{label.title}</Text>
+            </Group>
+          ))}
         </Group>
       </Stack>
     </Paper>

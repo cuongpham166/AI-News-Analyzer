@@ -108,15 +108,10 @@ const ImpactNewsList = (props: ImpactNewsListProps) => {
                   borderColor: ThemeColors.primary,
                 }}
               >
-                <Text
-                  size='sm'
-                  fw={600}
-                  lineClamp={2}
-                  color={ThemeColors.primary}
-                >
+                <Text size='sm' fw={600} lineClamp={2} c={ThemeColors.primary}>
                   {article.title}
                 </Text>
-                <Text size='xs' color={ThemeColors.primary}>
+                <Text size='xs'>
                   {publishDate.toLocaleDateString(undefined, options)}
                 </Text>
               </Card>

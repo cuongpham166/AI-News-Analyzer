@@ -54,7 +54,9 @@ const GlobalPulseTaskbar: React.FC<Props> = (props) => {
   return (
     <Paper p='md' style={{ background: ThemeColors.third }}>
       <Group align='center' gap='lg' style={{ width: '100%' }}>
-        <Title order={3}>Global Pulse</Title>
+        <Title order={3} style={{ color: ThemeColors.primary }}>
+          Global Pulse
+        </Title>
 
         <Group
           gap='md'
@@ -114,16 +116,6 @@ const GlobalPulseTaskbar: React.FC<Props> = (props) => {
               Update
             </Button>
           </Group>
-
-          <ActionIcon
-            variant='filled'
-            aria-label='User'
-            size={38}
-            radius='xl'
-            color={ThemeColors.primary}
-          >
-            <UserCircleIcon size={26} color={ThemeColors.third} />
-          </ActionIcon>
         </Group>
       </Group>
     </Paper>

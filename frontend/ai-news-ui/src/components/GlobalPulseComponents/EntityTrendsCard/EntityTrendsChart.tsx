@@ -8,7 +8,7 @@ import {
   Stack,
 } from '@mantine/core';
 import { getColorCode } from '../../../shared/utils/getColorCode';
-import { SentimentColors } from '../../../shared/contants/Colors';
+import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
 import type { EntityTrendsChartData } from '../../../shared/interfaces/EntityTrend';
 import { fetchGlobalEntityTrends } from '../../../services/analysisService';
 import { aggregateEntities } from '../../../shared/utils/aggregateData';
@@ -100,14 +100,22 @@ const EntityTrendsChart = () => {
             if (payload && payload[0]) {
               const { name, size, sentiment } = payload[0].payload;
               return (
-                <Paper p='sm' withBorder shadow='md'>
-                  <MantineText fw={700} size='sm' c='blue'>
+                <Paper
+                  p='sm'
+                  withBorder
+                  shadow='md'
+                  style={{
+                    background: ThemeColors.third,
+                    borderColor: ThemeColors.primary,
+                  }}
+                >
+                  <MantineText fw={700} size='md' c={ThemeColors.primary}>
                     {name}
                   </MantineText>
                   <Divider my={4} />
                   <Stack>
                     <Group gap='xs'>
-                      <MantineText size='sm' fw={700}>
+                      <MantineText size='sm' fw={500} c={ThemeColors.primary}>
                         Total Mentions:
                       </MantineText>
                       <MantineText size='sm' fw={500}>
@@ -115,7 +123,7 @@ const EntityTrendsChart = () => {
                       </MantineText>
                     </Group>
                     <Group gap='xs'>
-                      <MantineText size='sm' fw={700}>
+                      <MantineText size='sm' fw={500} c={ThemeColors.primary}>
                         Avg. Sentiment:
                       </MantineText>
                       <MantineText size='sm' fw={500}>

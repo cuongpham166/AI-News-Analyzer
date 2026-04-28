@@ -10,14 +10,14 @@ function GlobalPulsePage() {
     <Stack>
       <GlobalPulseTaskbar />
       <Grid gap='md'>
-        <Grid.Col span={8}>
+        <Grid.Col span={9}>
           <Stack gap='md'>
             <GlobalTrendsCard />
             <EntityTrendsCard />
           </Stack>
         </Grid.Col>
 
-        <Grid.Col span={4}>
+        <Grid.Col span={3}>
           <Stack style={{ flex: 1 }} gap='sm'>
             <ImpactNewsList sentiment='positive' />
             <ImpactNewsList sentiment='negative' />

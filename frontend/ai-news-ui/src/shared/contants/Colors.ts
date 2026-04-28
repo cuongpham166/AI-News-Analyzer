@@ -5,11 +5,18 @@ export const SentimentColors = {
   neutral: '--mantine-color-yellow-4',
 } as const;
 
-export const ThemeColors = {
+/*export const ThemeColors = {
   primary: '#2A1A1A',
   secondary: '#e89a95',
   third: '#fdf6f6',
   primaryBackground: '#f6d7d5',
+} as const;*/
+
+export const ThemeColors = {
+  primary: '#0e3b65',
+  secondary: '#faf1ca',
+  third: '#fdfaef',
+  primaryBackground: '#e1d8b5',
 } as const;
 
 export const TrendColors = [

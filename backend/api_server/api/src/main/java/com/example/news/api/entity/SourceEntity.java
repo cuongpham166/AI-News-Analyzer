@@ -3,12 +3,11 @@ package com.example.news.api.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "news")
+@Table(name = "source")
 public class SourceEntity {
     @Id
     private Integer id;
     private String name;
-
 
     public Integer getId() {
         return this.id;

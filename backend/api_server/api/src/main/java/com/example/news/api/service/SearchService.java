@@ -18,18 +18,15 @@ public class SearchService {
     }
 
     public InferenceNews getInferenceNewsById(String id) throws IOException {
-       InferenceNews foundNews = this.searchRepo.getInferenceNewsById(id);
-       return foundNews;
+        return this.searchRepo.getInferenceNewsById(id);
     }
 
     public List<InferenceNews> getAllInferenceNews() throws IOException {
-        List<InferenceNews>foundNewsList = this.searchRepo.getAllInferenceNews();
-        return foundNewsList;
+        return this.searchRepo.getAllInferenceNews();
     }
 
     public List<InferenceNews> findInterfaceNewsByText (String searchText) throws IOException {
-        List<InferenceNews> foundNewsList = this.searchRepo.findInterfaceNewsByText(searchText);
-        return foundNewsList;
+        return this.searchRepo.findInterfaceNewsByText(searchText);
     }
 
 }

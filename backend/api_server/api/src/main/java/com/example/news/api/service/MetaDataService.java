@@ -1,8 +1,10 @@
 package com.example.news.api.service;
 
-
 import java.util.List;
 
+import com.example.news.api.dto.analytics.DetailedEntityDTO;
+import com.example.news.api.entity.NewsEntity;
+import com.example.news.api.repository.analytics.RelationshipRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,14 @@ import com.example.news.api.repository.jpa.*;
 @Service
 public class MetaDataService {
     private final NewsRepository newsRepo;
+    private final RelationshipRepository relationshipRepo;
 
     public MetaDataService(
-        NewsRepository newsRepo
+        NewsRepository newsRepo,
+        RelationshipRepository relationshipRepo
     ){
         this.newsRepo = newsRepo;
+        this.relationshipRepo = relationshipRepo;
     }
 
 
@@ -31,9 +36,10 @@ public class MetaDataService {
     }
 
     public DetailedNewsDTO getDetailedNewsByLink(String link) {
-        return this.newsRepo.findDetailByLink(link)
-            .map(NewsMapper::toDetailedDTO)
-            .orElseThrow(() -> new RuntimeException("Not found"));
+        NewsEntity foundNews = newsRepo.findDetailByLink(link)
+                .orElseThrow(() -> new RuntimeException("News not found"));
+        // Fetch entities as DTOs (with entityType fully populated)
+        List<DetailedEntityDTO> detailedEntity = relationshipRepo.findEntitiesByNewsLink(link);
+        return NewsMapper.toDetailedDTO(foundNews,detailedEntity);
     }
-
 }

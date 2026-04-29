@@ -18,7 +18,6 @@ public class Entity implements Serializable {
     private Integer id;
     private String value;
     private Integer entityTypeId;
-    private String name;
 
     public Entity() {}
 
@@ -26,19 +25,16 @@ public class Entity implements Serializable {
         this.id = value.id;
         this.value = value.value;
         this.entityTypeId = value.entityTypeId;
-        this.name = value.name;
     }
 
     public Entity(
         Integer id,
         String value,
-        Integer entityTypeId,
-        String name
+        Integer entityTypeId
     ) {
         this.id = id;
         this.value = value;
         this.entityTypeId = entityTypeId;
-        this.name = name;
     }
 
     /**
@@ -83,20 +79,6 @@ public class Entity implements Serializable {
         this.entityTypeId = entityTypeId;
     }
 
-    /**
-     * Getter for <code>public.entity.name</code>.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Setter for <code>public.entity.name</code>.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -124,12 +106,6 @@ public class Entity implements Serializable {
         }
         else if (!this.entityTypeId.equals(other.entityTypeId))
             return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
         return true;
     }
 
@@ -140,7 +116,6 @@ public class Entity implements Serializable {
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
         result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
         result = prime * result + ((this.entityTypeId == null) ? 0 : this.entityTypeId.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
         return result;
     }
 
@@ -151,7 +126,6 @@ public class Entity implements Serializable {
         sb.append(id);
         sb.append(", ").append(value);
         sb.append(", ").append(entityTypeId);
-        sb.append(", ").append(name);
 
         sb.append(")");
         return sb.toString();

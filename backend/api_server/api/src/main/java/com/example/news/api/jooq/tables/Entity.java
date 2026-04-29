@@ -74,11 +74,6 @@ public class Entity extends TableImpl<EntityRecord> {
      */
     public final TableField<EntityRecord, Integer> ENTITY_TYPE_ID = createField(DSL.name("entity_type_id"), SQLDataType.INTEGER, this, "");
 
-    /**
-     * The column <code>public.entity.name</code>.
-     */
-    public final TableField<EntityRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
-
     private Entity(Name alias, Table<EntityRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

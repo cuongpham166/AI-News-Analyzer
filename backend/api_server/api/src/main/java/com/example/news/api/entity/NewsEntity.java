@@ -2,8 +2,6 @@ package com.example.news.api.entity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Set;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -38,9 +36,6 @@ public class NewsEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "source_id")
     private SourceEntity source;
-
-    @ManyToMany(mappedBy = "newsList")
-    private Set<EntityEntity> entities;
 
     public Integer getId() {
         return this.id;
@@ -129,14 +124,4 @@ public class NewsEntity {
     public void setSource(SourceEntity source) {
         this.source = source;
     }
-
-
-    public Set<EntityEntity> getEntities() {
-        return this.entities;
-    }
-
-    public void setEntities(Set<EntityEntity> entities) {
-        this.entities = entities;
-    }
-
 }

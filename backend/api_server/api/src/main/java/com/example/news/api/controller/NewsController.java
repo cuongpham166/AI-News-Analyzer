@@ -1,7 +1,6 @@
 package com.example.news.api.controller;
 
 import java.util.List;
-import java.sql.*;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +19,12 @@ public class NewsController {
 
     @GetMapping("/all")
     public List<NewsDTO> getAllNews(@RequestParam(required = false, defaultValue = "10") int limit) {
-        List<NewsDTO> newsList = this.metadataService.getAllNews(limit);
-        return newsList;
+        return this.metadataService.getAllNews(limit);
     }
 
-    @GetMapping("/{link}")
-    public DetailedNewsDTO getNewsByLink(@PathVariable String link) {
-        DetailedNewsDTO foundNews = this.metadataService.getDetailedNewsByLink(link);
-        return foundNews;
+    @GetMapping("/detail")
+    public DetailedNewsDTO getNewsByLink( @RequestParam String link) {
+        return this.metadataService.getDetailedNewsByLink(link);
     }
 
 }

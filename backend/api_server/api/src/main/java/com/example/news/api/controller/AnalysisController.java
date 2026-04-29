@@ -30,8 +30,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     ) throws IOException {
-        GlobalTrendsDTO trendResult = this.analysisService.getGlobalTrendsWithRelativeInterval(intervalUnit,amount);
-        return trendResult;
+        return this.analysisService.getGlobalTrendsWithRelativeInterval(intervalUnit,amount);
     }
 
     @GetMapping("/global_entity_trends")
@@ -39,8 +38,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws IOException {
-        GlobalEntityTrendsDTO trendResult = this.analysisService.getGlobalEntityWithRelativeInterval(intervalUnit,amount);
-        return trendResult;
+        return this.analysisService.getGlobalEntityWithRelativeInterval(intervalUnit,amount);
     }
 
     @GetMapping("/impact_articles")
@@ -50,8 +48,7 @@ public class AnalysisController {
         @RequestParam int topN, 
         @RequestParam boolean isPositive
     ) throws IOException{
-        List<InferenceNews> newsResult = this.analysisService.getImpactArticlesWithRelativeInterval(intervalUnit,amount,topN,isPositive);
-        return newsResult;        
+        return this.analysisService.getImpactArticlesWithRelativeInterval(intervalUnit,amount,topN,isPositive);
     }
 
     @GetMapping("/spatial_map")
@@ -59,8 +56,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List<SpatialMapDTO> result = this.analysisService.getSpatialMapWithRelativeInterval(intervalUnit, amount);
-        return result;
+        return this.analysisService.getSpatialMapWithRelativeInterval(intervalUnit, amount);
     }
 
     @GetMapping("/power_couple")
@@ -68,8 +64,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List<PowerCoupleDTO> result = this.analysisService.getPowerCoupleWithRelativeInterval(intervalUnit, amount);
-        return result;
+        return this.analysisService.getPowerCoupleWithRelativeInterval(intervalUnit, amount);
     }
 
     @GetMapping("/event_tracker")
@@ -77,8 +72,7 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List <EventTrackerDTO> result = this.analysisService.getEventTrackerWithRelativeInterval(intervalUnit, amount);
-        return result;
+        return this.analysisService.getEventTrackerWithRelativeInterval(intervalUnit, amount);
     }
 
     @GetMapping("/volatility_index")
@@ -86,7 +80,6 @@ public class AnalysisController {
         @RequestParam String intervalUnit, 
         @RequestParam int amount
     )throws SQLException {
-        List <VolatilityIndexDTO> result = this.analysisService.getVolatilityIndexWithRelativeInterval(intervalUnit, amount);
-        return result;
+        return this.analysisService.getVolatilityIndexWithRelativeInterval(intervalUnit, amount);
     }
 }

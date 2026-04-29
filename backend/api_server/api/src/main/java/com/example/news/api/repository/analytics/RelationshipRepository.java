@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.news.api.dto.analytics.DetailedEntityDTO;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.QueryConfig;
 import org.neo4j.driver.Session;
@@ -63,7 +64,6 @@ public class RelationshipRepository {
         // Convert Timestamp → LocalDateTime (since jOOQ uses javaTimeTypes)
         LocalDateTime start = startRange.toLocalDateTime();
         LocalDateTime end = endRange.toLocalDateTime();
-
         return dsl.select(
                 Tables.ENTITY.as("e1").VALUE.as("person"),
                 Tables.ENTITY.as("e2").VALUE.as("organization"),
@@ -116,6 +116,24 @@ public class RelationshipRepository {
             .fetchInto(EventTrackerDTO.class);
     }
 
+    public List<DetailedEntityDTO> findEntitiesByNewsLink(String newsLink) {
+        return dsl.select(
+                Tables.ENTITY.ID.as("entity_id"),
+                Tables.ENTITY.VALUE.as("entity_name"),
+                Tables.ENTITY_TYPE.NAME.as("entity_type_name"),
+                Tables.ENTITY_TYPE.ID.as("entity_type_id")
+        )
+                .from(Tables.ENTITY)
+                .leftJoin(Tables.ENTITY_TYPE)
+                .on(Tables.ENTITY.ENTITY_TYPE_ID.eq(Tables.ENTITY_TYPE.ID))
+                .leftJoin(Tables.NEWS_ENTITY)
+                .on(Tables.ENTITY.ID.eq(Tables.NEWS_ENTITY.ENTITY_ID))
+                .leftJoin(Tables.NEWS)
+                .on(Tables.NEWS_ENTITY.NEWS_ID.eq(Tables.NEWS.ID))
+                .where(Tables.NEWS.LINK.eq(newsLink))
+                .fetchInto(DetailedEntityDTO.class);
+
+    }
     public void syncNewsToNeo4j() throws SQLException {
         List<NewsDTO> newsList = new ArrayList<>();
         String sql = aggQuery.getAllNewsQueryWithoutLimit();
@@ -151,9 +169,9 @@ public class RelationshipRepository {
                     System.out.println("Skipping news with null topic: " + news.getLink());
                 }
             }
-        } 
-  
+        }
     }
+
 
     public void syncNewsEntityToNeo4j() throws SQLException {
         List<Neo4jEntityDTO> newsEntitiesList = new ArrayList<>();

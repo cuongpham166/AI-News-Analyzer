@@ -33,7 +33,7 @@ public class SentimentRepository {
         return dsl.select(
                 Tables.ENTITY.VALUE.as("entity_name"),
                 DSL.avg(Tables.NEWS.SENTIMENT).as("avg_sentiment"),
-                //DSL.stddev(Tables.NEWS.SENTIMENT).as("volatility"),
+                        DSL.stddevSamp(Tables.NEWS.SENTIMENT).as("volatility"),
                 DSL.count().as("mentions")
             )
             .from(Tables.NEWS)
@@ -42,7 +42,7 @@ public class SentimentRepository {
             .where(Tables.NEWS.PUBLISH_DATE.between(start, end))
             .groupBy(Tables.ENTITY.VALUE)
             .having(DSL.count().gt(5))
-            .orderBy(DSL.field("volatility").desc())   // or DSL.stddev(NEWS.SENTIMENT).desc()
+            .orderBy(DSL.stddevSamp(Tables.NEWS.SENTIMENT).desc())
             .fetchInto(VolatilityIndexDTO.class);
     }
 }

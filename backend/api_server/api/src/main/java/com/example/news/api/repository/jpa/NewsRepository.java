@@ -21,12 +21,12 @@ public interface NewsRepository extends JpaRepository<NewsEntity, Integer> {
         """)
     List<NewsEntity> findAllWithRelations(Pageable pageable);
 
+
     @Query("""
-        SELECT n FROM NewsEntity n
-        JOIN FETCH n.topic
-        JOIN FETCH n.source
-        LEFT JOIN FETCH n.entities
-        WHERE n.link = :link
+    SELECT n FROM NewsEntity n
+    JOIN FETCH n.topic
+    JOIN FETCH n.source
+    WHERE n.link = :link
     """)
     Optional<NewsEntity> findDetailByLink(@Param("link") String link);
 }

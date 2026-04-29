@@ -60,20 +60,6 @@ public class EntityRecord extends UpdatableRecordImpl<EntityRecord> {
         return (Integer) get(2);
     }
 
-    /**
-     * Setter for <code>public.entity.name</code>.
-     */
-    public void setName(String value) {
-        set(3, value);
-    }
-
-    /**
-     * Getter for <code>public.entity.name</code>.
-     */
-    public String getName() {
-        return (String) get(3);
-    }
-
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -97,13 +83,12 @@ public class EntityRecord extends UpdatableRecordImpl<EntityRecord> {
     /**
      * Create a detached, initialised EntityRecord
      */
-    public EntityRecord(Integer id, String value, Integer entityTypeId, String name) {
+    public EntityRecord(Integer id, String value, Integer entityTypeId) {
         super(Entity.ENTITY);
 
         setId(id);
         setValue(value);
         setEntityTypeId(entityTypeId);
-        setName(name);
         resetChangedOnNotNull();
     }
 
@@ -117,7 +102,6 @@ public class EntityRecord extends UpdatableRecordImpl<EntityRecord> {
             setId(value.getId());
             setValue(value.getValue());
             setEntityTypeId(value.getEntityTypeId());
-            setName(value.getName());
             resetChangedOnNotNull();
         }
     }

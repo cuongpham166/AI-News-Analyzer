@@ -1,7 +1,6 @@
 package com.example.news.api.util;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 import org.springframework.stereotype.Component;
@@ -32,13 +31,12 @@ public class AggregationInterval {
     }
 
     public static CalendarInterval mapInterval(String intervalUnit) {
-        switch (intervalUnit.toLowerCase()) {
-            case "day":   return CalendarInterval.Day;
-            case "week":  return CalendarInterval.Week;
-            case "month": return CalendarInterval.Month;
-            default: 
-                throw new IllegalArgumentException("Unsupported interval: " + intervalUnit);
-        }
+        return switch (intervalUnit.toLowerCase()) {
+            case "day" -> CalendarInterval.Day;
+            case "week" -> CalendarInterval.Week;
+            case "month" -> CalendarInterval.Month;
+            default -> throw new IllegalArgumentException("Unsupported interval: " + intervalUnit);
+        };
     }
 
 

@@ -1,13 +1,8 @@
 package com.example.news.api.mapper;
-
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.List;
+import com.example.news.api.dto.analytics.DetailedEntityDTO;
 import com.example.news.api.dto.jpa.DetailedNewsDTO;
-import com.example.news.api.dto.jpa.EntityDTO;
-import com.example.news.api.dto.jpa.EntityTypeDTO;
 import com.example.news.api.dto.jpa.NewsDTO;
-import com.example.news.api.entity.EntityEntity;
 import com.example.news.api.entity.NewsEntity;
 
 public class NewsMapper {
@@ -37,10 +32,9 @@ public class NewsMapper {
         return dto;
     }
 
-    public static DetailedNewsDTO toDetailedDTO (NewsEntity entity){
+    public static DetailedNewsDTO toDetailedDTO (NewsEntity entity, List<DetailedEntityDTO> detailedEntity){
         DetailedNewsDTO detailedDTO = new DetailedNewsDTO();
-        Set<EntityDTO> entitiesSet = new HashSet<EntityDTO>();
-        
+
         detailedDTO.setId(entity.getId());
         detailedDTO.setTitle(entity.getTitle());
         detailedDTO.setPublishDate(entity.getPublishDate());
@@ -61,23 +55,7 @@ public class NewsMapper {
             detailedDTO.setSource_name(entity.getSource().getName());
         }
 
-        if(entity.getEntities().size() > 0){
-            entity.getEntities().forEach(newsEntity-> {
-                EntityDTO entityDTO = new EntityDTO();
-                entityDTO.setId(newsEntity.getId());
-                entityDTO.setValue(newsEntity.getName());
-                
-                EntityTypeDTO entityTypeDTO= new EntityTypeDTO();
-                entityTypeDTO.setId(newsEntity.getEntityType().getId());
-                entityTypeDTO.setName(newsEntity.getEntityType().getName());
-
-                entityDTO.setEntityTpe(entityTypeDTO);
-
-                entitiesSet.add(entityDTO);
-            });
-        }
-
-        detailedDTO.setEntities(entitiesSet);
+        detailedDTO.setEntities(detailedEntity);
         return detailedDTO;
     }
 }

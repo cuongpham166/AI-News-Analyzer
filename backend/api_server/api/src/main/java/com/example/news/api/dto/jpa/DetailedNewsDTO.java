@@ -1,8 +1,10 @@
 package com.example.news.api.dto.jpa;
 
+import com.example.news.api.dto.analytics.DetailedEntityDTO;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Set;
+import java.util.List;
 
 public class DetailedNewsDTO {
     private int id;
@@ -19,13 +21,13 @@ public class DetailedNewsDTO {
     private String topic_name;
     private String source_name;
 
-    private Set<EntityDTO> entities;
+    private List<DetailedEntityDTO> entities;
 
 
     public DetailedNewsDTO() {
     }
 
-    public DetailedNewsDTO(int id, String title, Timestamp publishDate, String link, String language, String fullText, String summary, String sentimentLabel, BigDecimal sentiment, Integer topicId, Integer sourceId, String topic_name, String source_name, Set<EntityDTO> entities) {
+    public DetailedNewsDTO(int id, String title, Timestamp publishDate, String link, String language, String fullText, String summary, String sentimentLabel, BigDecimal sentiment, Integer topicId, Integer sourceId, String topic_name, String source_name, List<DetailedEntityDTO> entities) {
         this.id = id;
         this.title = title;
         this.publishDate = publishDate;
@@ -146,11 +148,11 @@ public class DetailedNewsDTO {
         this.source_name = source_name;
     }
 
-    public Set<EntityDTO> getEntities() {
-        return this.entities;
+    public List<DetailedEntityDTO> getEntities() {
+        return entities;
     }
 
-    public void setEntities(Set<EntityDTO> entities) {
+    public void setEntities(List<DetailedEntityDTO> entities) {
         this.entities = entities;
     }
 

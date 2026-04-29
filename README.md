@@ -54,9 +54,11 @@ A scalable, event-driven AI platform that collects news from RSS feeds, enriches
 
 ### Architecture Overview
 
-![Overview Structure](/images/Structure_v3.png)
+![Overview Structure](/images/Architecture_v4.png)
 
 ### Database Overview
+
+- **Data Persistence Layer:** Implemented Persistence with Spring Data JPA for standardized CRUD operations and jOOQ for high-performance, type-safe complex analytical queries, ensuring both code maintainability and execution speed.
 
 #### PostgresSQL
 

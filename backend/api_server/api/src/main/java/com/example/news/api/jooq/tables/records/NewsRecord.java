@@ -175,20 +175,6 @@ public class NewsRecord extends UpdatableRecordImpl<NewsRecord> {
         return (Integer) get(10);
     }
 
-    /**
-     * Setter for <code>public.news.name</code>.
-     */
-    public void setName(String value) {
-        set(11, value);
-    }
-
-    /**
-     * Getter for <code>public.news.name</code>.
-     */
-    public String getName() {
-        return (String) get(11);
-    }
-
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -212,7 +198,7 @@ public class NewsRecord extends UpdatableRecordImpl<NewsRecord> {
     /**
      * Create a detached, initialised NewsRecord
      */
-    public NewsRecord(Integer id, String title, LocalDateTime publishDate, String link, String lang, String fullText, String summary, String sentimentLabel, BigDecimal sentiment, Integer topicId, Integer sourceId, String name) {
+    public NewsRecord(Integer id, String title, LocalDateTime publishDate, String link, String lang, String fullText, String summary, String sentimentLabel, BigDecimal sentiment, Integer topicId, Integer sourceId) {
         super(News.NEWS);
 
         setId(id);
@@ -226,7 +212,6 @@ public class NewsRecord extends UpdatableRecordImpl<NewsRecord> {
         setSentiment(sentiment);
         setTopicId(topicId);
         setSourceId(sourceId);
-        setName(name);
         resetChangedOnNotNull();
     }
 
@@ -248,7 +233,6 @@ public class NewsRecord extends UpdatableRecordImpl<NewsRecord> {
             setSentiment(value.getSentiment());
             setTopicId(value.getTopicId());
             setSourceId(value.getSourceId());
-            setName(value.getName());
             resetChangedOnNotNull();
         }
     }

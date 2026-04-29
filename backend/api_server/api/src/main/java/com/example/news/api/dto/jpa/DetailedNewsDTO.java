@@ -4,6 +4,7 @@ import com.example.news.api.dto.analytics.DetailedEntityDTO;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DetailedNewsDTO {
@@ -21,7 +22,7 @@ public class DetailedNewsDTO {
     private String topic_name;
     private String source_name;
 
-    private List<DetailedEntityDTO> entities;
+    private List<DetailedEntityDTO> entities = new ArrayList<>();
 
 
     public DetailedNewsDTO() {

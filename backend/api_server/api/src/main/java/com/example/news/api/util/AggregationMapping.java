@@ -144,7 +144,6 @@ public class AggregationMapping {
         news.setPublishDate(rs.getTimestamp("publish_date"));
         news.setLink(rs.getString("link"));
         news.setLanguage(rs.getString("lang"));
-        news.setFullText(rs.getString("full_text"));
         news.setSummary(rs.getString("summary"));
         news.setSentimentLabel(rs.getString("sentiment_label"));
         news.setSentiment(rs.getBigDecimal("sentiment"));

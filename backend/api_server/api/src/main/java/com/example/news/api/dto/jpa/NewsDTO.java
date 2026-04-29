@@ -10,7 +10,6 @@ public class NewsDTO {
     private Timestamp publishDate;
     private String link;
     private String language;
-    private String fullText;
     private String summary;
     private String sentimentLabel;
     private BigDecimal sentiment;
@@ -22,13 +21,12 @@ public class NewsDTO {
     public NewsDTO() {
     }
 
-    public NewsDTO(int id, String title, Timestamp publishDate, String link, String language, String fullText, String summary, String sentimentLabel, BigDecimal sentiment, Integer topicId, Integer sourceId, String topic_name, String source_name) {
+    public NewsDTO(int id, String title, Timestamp publishDate, String link, String language, String summary, String sentimentLabel, BigDecimal sentiment, Integer topicId, Integer sourceId, String topic_name, String source_name) {
         this.id = id;
         this.title = title;
         this.publishDate = publishDate;
         this.link = link;
         this.language = language;
-        this.fullText = fullText;
         this.summary = summary;
         this.sentimentLabel = sentimentLabel;
         this.sentiment = sentiment;
@@ -77,14 +75,6 @@ public class NewsDTO {
 
     public void setLanguage(String language) {
         this.language = language;
-    }
-
-    public String getFullText() {
-        return this.fullText;
-    }
-
-    public void setFullText(String fullText) {
-        this.fullText = fullText;
     }
 
     public String getSummary() {
@@ -151,7 +141,6 @@ public class NewsDTO {
             ", publishDate='" + getPublishDate() + "'" +
             ", link='" + getLink() + "'" +
             ", language='" + getLanguage() + "'" +
-            ", fullText='" + getFullText() + "'" +
             ", summary='" + getSummary() + "'" +
             ", sentimentLabel='" + getSentimentLabel() + "'" +
             ", sentiment='" + getSentiment() + "'" +

@@ -18,20 +18,23 @@ import com.example.news.api.repository.jpa.*;
 public class MetaDataService {
     private final NewsRepository newsRepo;
     private final RelationshipRepository relationshipRepo;
+    private final NewsMapper newsMapper;
 
     public MetaDataService(
         NewsRepository newsRepo,
-        RelationshipRepository relationshipRepo
+        RelationshipRepository relationshipRepo,
+        NewsMapper newsMapper
     ){
         this.newsRepo = newsRepo;
         this.relationshipRepo = relationshipRepo;
+        this.newsMapper = newsMapper;
     }
 
 
     public List<NewsDTO> getAllNews(int limit) {
         return this.newsRepo.findAllWithRelations(PageRequest.of(0, limit))
             .stream()
-            .map(NewsMapper::toDTO)
+            .map(this.newsMapper::toDTO)
             .toList();
     }
 
@@ -40,6 +43,6 @@ public class MetaDataService {
                 .orElseThrow(() -> new RuntimeException("News not found"));
         // Fetch entities as DTOs (with entityType fully populated)
         List<DetailedEntityDTO> detailedEntity = relationshipRepo.findEntitiesByNewsLink(link);
-        return NewsMapper.toDetailedDTO(foundNews,detailedEntity);
+        return this.newsMapper.toDetailedDTO(foundNews,detailedEntity);
     }
 }

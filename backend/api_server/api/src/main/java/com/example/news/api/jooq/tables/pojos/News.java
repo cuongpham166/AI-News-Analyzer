@@ -28,7 +28,6 @@ public class News implements Serializable {
     private BigDecimal sentiment;
     private Integer topicId;
     private Integer sourceId;
-    private String name;
 
     public News() {}
 
@@ -44,7 +43,6 @@ public class News implements Serializable {
         this.sentiment = value.sentiment;
         this.topicId = value.topicId;
         this.sourceId = value.sourceId;
-        this.name = value.name;
     }
 
     public News(
@@ -58,8 +56,7 @@ public class News implements Serializable {
         String sentimentLabel,
         BigDecimal sentiment,
         Integer topicId,
-        Integer sourceId,
-        String name
+        Integer sourceId
     ) {
         this.id = id;
         this.title = title;
@@ -72,7 +69,6 @@ public class News implements Serializable {
         this.sentiment = sentiment;
         this.topicId = topicId;
         this.sourceId = sourceId;
-        this.name = name;
     }
 
     /**
@@ -229,20 +225,6 @@ public class News implements Serializable {
         this.sourceId = sourceId;
     }
 
-    /**
-     * Getter for <code>public.news.name</code>.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Setter for <code>public.news.name</code>.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -318,12 +300,6 @@ public class News implements Serializable {
         }
         else if (!this.sourceId.equals(other.sourceId))
             return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
         return true;
     }
 
@@ -342,7 +318,6 @@ public class News implements Serializable {
         result = prime * result + ((this.sentiment == null) ? 0 : this.sentiment.hashCode());
         result = prime * result + ((this.topicId == null) ? 0 : this.topicId.hashCode());
         result = prime * result + ((this.sourceId == null) ? 0 : this.sourceId.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
         return result;
     }
 
@@ -361,7 +336,6 @@ public class News implements Serializable {
         sb.append(", ").append(sentiment);
         sb.append(", ").append(topicId);
         sb.append(", ").append(sourceId);
-        sb.append(", ").append(name);
 
         sb.append(")");
         return sb.toString();

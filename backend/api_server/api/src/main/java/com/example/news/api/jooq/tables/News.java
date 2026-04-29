@@ -117,11 +117,6 @@ public class News extends TableImpl<NewsRecord> {
      */
     public final TableField<NewsRecord, Integer> SOURCE_ID = createField(DSL.name("source_id"), SQLDataType.INTEGER, this, "");
 
-    /**
-     * The column <code>public.news.name</code>.
-     */
-    public final TableField<NewsRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
-
     private News(Name alias, Table<NewsRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

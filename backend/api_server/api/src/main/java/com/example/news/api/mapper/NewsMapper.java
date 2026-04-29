@@ -4,9 +4,11 @@ import com.example.news.api.dto.analytics.DetailedEntityDTO;
 import com.example.news.api.dto.jpa.DetailedNewsDTO;
 import com.example.news.api.dto.jpa.NewsDTO;
 import com.example.news.api.entity.NewsEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class NewsMapper {
-    public static NewsDTO toDTO(NewsEntity entity) {
+    public NewsDTO toDTO(NewsEntity entity) {
         NewsDTO dto = new NewsDTO();
 
         dto.setId(entity.getId());
@@ -14,7 +16,6 @@ public class NewsMapper {
         dto.setPublishDate(entity.getPublishDate());
         dto.setLink(entity.getLink());
         dto.setLanguage(entity.getLang());
-        dto.setFullText(entity.getFullText());
         dto.setSummary(entity.getSummary());
         dto.setSentimentLabel(entity.getSentimentLabel());
         dto.setSentiment(entity.getSentiment());
@@ -32,7 +33,7 @@ public class NewsMapper {
         return dto;
     }
 
-    public static DetailedNewsDTO toDetailedDTO (NewsEntity entity, List<DetailedEntityDTO> detailedEntity){
+    public DetailedNewsDTO toDetailedDTO (NewsEntity entity, List<DetailedEntityDTO> detailedEntity){
         DetailedNewsDTO detailedDTO = new DetailedNewsDTO();
 
         detailedDTO.setId(entity.getId());

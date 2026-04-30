@@ -46,6 +46,7 @@ const ImpactNewsList = (props: ImpactNewsListProps) => {
         topN,
         isPositive,
       );
+      console.log('ImpactNewsList', result);
       if (result) setNews(result);
     },
     [],

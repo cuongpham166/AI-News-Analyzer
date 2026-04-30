@@ -1,24 +1,27 @@
 import * as React from 'react';
 import { useState, useContext } from 'react';
-import { GlobalPulseContext } from '../../../shared/contexts/global_pulse/GlobalPulseContext';
 import { NumberInput, NativeSelect, Button, Group } from '@mantine/core';
-import {
-  ArrowRightIcon,
-  CaretDownIcon,
-  UserCircleIcon,
-} from '@phosphor-icons/react';
+import { ArrowRightIcon, CaretDownIcon } from '@phosphor-icons/react';
 import { ThemeColors } from '../../../shared/contants/Colors';
-import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
+import { useEntityRelationship } from '../../../shared/contexts/entity_relationship/useEntityRelationship';
 import Taskbar from '../../generic/Taskbar';
 type Props = {};
 
-const GlobalPulseTaskbar: React.FC<Props> = (props) => {
+const RelationshipSummaryTaskbar: React.FC<Props> = (props) => {
   const [intervalUnit, setIntervalUnit] = useState<string>('month');
   const [intervalAmount, setIntervalAmount] = useState<number>(6);
-  const { globalPulseInterval, setGlobalPulseInterval } = useGlobalPulse();
+  const { entityRelationshipInterval, setEntityRelationshipInterval } =
+    useEntityRelationship();
 
   const onChangeNumberInterval = (value) => {
     setIntervalAmount(parseInt(value));
+  };
+
+  const onChangeEntityRelationshipInterval = () => {
+    setEntityRelationshipInterval({
+      ...entityRelationshipInterval,
+      ...{ intervalUnit: intervalUnit, amount: intervalAmount },
+    });
   };
 
   const onChangeTypeInterval = (value) => {
@@ -40,15 +43,8 @@ const GlobalPulseTaskbar: React.FC<Props> = (props) => {
     }
   };
 
-  const onChangeGlobalPulseInterval = () => {
-    setGlobalPulseInterval({
-      ...globalPulseInterval,
-      ...{ intervalUnit: intervalUnit, amount: intervalAmount },
-    });
-  };
-
   return (
-    <Taskbar taskbarTitle='Global Pulse'>
+    <Taskbar taskbarTitle='Relationship Summary'>
       <Group gap='sm' align='center'>
         <NumberInput
           name='time_value'
@@ -84,7 +80,7 @@ const GlobalPulseTaskbar: React.FC<Props> = (props) => {
               },
             },
           }}
-          onClick={onChangeGlobalPulseInterval}
+          onClick={onChangeEntityRelationshipInterval}
         >
           Update
         </Button>
@@ -93,4 +89,4 @@ const GlobalPulseTaskbar: React.FC<Props> = (props) => {
   );
 };
 
-export default GlobalPulseTaskbar;
+export default RelationshipSummaryTaskbar;

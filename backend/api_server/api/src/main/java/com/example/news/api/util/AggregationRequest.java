@@ -107,6 +107,7 @@ public class AggregationRequest {
             .query(q -> q.bool(b -> b
                 .filter(f -> f.range(r -> r
                     .field("publish_date")
+                        .format("epoch_second")
                     .gte(JsonData.of(startEpoch))
                     .lte(JsonData.of(endEpoch))
                 ))
@@ -115,6 +116,7 @@ public class AggregationRequest {
                 .field("sentiment")
                 .order(isPositive ? SortOrder.Desc : SortOrder.Asc)
             ))
+                .sort(so -> so.field(f -> f.field("publish_date").order(SortOrder.Desc)))
         );
     }
 

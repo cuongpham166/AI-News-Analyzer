@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { ImpactNews } from '../shared/interfaces/ImpactNews';
 import type { EntityTrend } from '../shared/interfaces/EntityTrend';
 import type { GlobalTrend } from '../shared/interfaces/GlobalTrend';
+import type { RelationshipGraph } from '../shared/interfaces/RelationshipGraph';
 
 const API_URL = import.meta.env.VITE_API_ENDPOINT;
 
@@ -69,6 +70,27 @@ export const fetchGlobalTrends = async (
     return response.data;
   } catch (error) {
     console.error('Error fetching global trends:', error);
+    return undefined;
+  }
+};
+
+export const fetchRelationshipGraphData = async (
+  intervalUnit: string,
+  amount: number,
+): Promise<RelationshipGraph> => {
+  try {
+    const response = await axios.get<RelationshipGraph>(
+      `${API_URL}/analysis/discovery`,
+      {
+        params: {
+          intervalUnit,
+          amount,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error relationship graph data:', error);
     return undefined;
   }
 };

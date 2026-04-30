@@ -12,6 +12,7 @@ import NewsPage from './pages/NewsPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 
 import { GlobalPulseProvider } from './shared/contexts/global_pulse/GlobalPulseProvider.tsx';
+import { EntityRelationshipProvider } from './shared/contexts/entity_relationship/EntityRelationshipProvider.tsx';
 const App: React.FC = () => {
   return (
     <MantineProvider>
@@ -27,7 +28,14 @@ const App: React.FC = () => {
               }
             />
             <Route path='/dimension' element={<DimensionsRisksPage />} />
-            <Route path='/relationship' element={<RelationshipSummaryPage />} />
+            <Route
+              path='/relationship'
+              element={
+                <EntityRelationshipProvider>
+                  <RelationshipSummaryPage />
+                </EntityRelationshipProvider>
+              }
+            />
             <Route path='/news' element={<NewsPage />} />
             <Route path='*' element={<NotFoundPage />} />
           </Routes>

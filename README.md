@@ -150,7 +150,8 @@ The entire flow is **asynchronous and decoupled** thanks to **NATS** messaging, 
 _The Flow Chart_
 
 ![Dashboard](/images/Project.png)
-_The Example of UI_
+![Entity Relationship](/images/Project_2.png)
+_Examples of UI_
 
 ![Neo4j](/images/Neo4j_Example.png)
 

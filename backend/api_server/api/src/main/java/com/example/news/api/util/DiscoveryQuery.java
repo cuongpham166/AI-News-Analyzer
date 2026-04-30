@@ -61,7 +61,16 @@ public class DiscoveryQuery {
                 "WITH n, e " +
                 "MATCH (n)-[:MENTIONS]->(other:Entity) " +
                 "WHERE id(e) < id(other) " +
-                "RETURN e.value AS source, other.value AS target, " +
-                "count(n) AS weight, avg(n.sentiment) AS sentiment";
+                "WITH e, other, count(n) AS weight, avg(n.sentiment) AS sentiment " +
+                "WHERE weight > 1 " + // Only show connections appearing in 2+ articles
+                "RETURN " +
+                "  e.value AS source, " +
+                "  labels(e)[0] AS sourceGroup, " +
+                "  other.value AS target, " +
+                "  labels(other)[0] AS targetGroup, " +
+                "  weight, " +
+                "  sentiment " +
+                "ORDER BY weight DESC " +
+                "LIMIT 300"; // Prevents "hairball" graph
     }
 }

@@ -229,49 +229,46 @@ public class RelationshipRepository {
         }
     }
 
-    public GraphResponseDTO getDiscoveryData(String intervalUnit, int amount){
+    public GraphResponseDTO getDiscoveryData(String intervalUnit, int amount) {
         GraphResponseDTO response = new GraphResponseDTO();
+        Map<String, GraphNodeDTO> nodeMap = new HashMap<>();
 
         long[] rangeResult = this.aggInterval.computeEpochRangeRelativeForNeo4j(intervalUnit, amount);
-        long startRange = rangeResult[0];
-        long endRange = rangeResult[1];
-
-        Map<String, GraphNodeDTO> nodeMap = new HashMap<>();
 
         try (Session session = this.neo4jDriver.session()) {
             session.executeRead(tx -> {
                 Result result = tx.run(this.neo4jQuery.getDiscoveryGraphQuery(),
-                        Map.of("startTime", startRange, "endTime", endRange));
+                        Map.of("startTime", rangeResult[0], "endTime", rangeResult[1]));
 
                 while (result.hasNext()) {
                     Record record = result.next();
+                    String sName = record.get("source").asString();
+                    String sGroup = record.get("sourceGroup").asString();
+                    String tName = record.get("target").asString();
+                    String tGroup = record.get("targetGroup").asString();
+                    double w = record.get("weight").asDouble();
+                    double s = record.get("sentiment").asDouble();
 
-                    String sourceName = record.get("source").asString();
-                    String targetName = record.get("target").asString();
+                    // Build unique nodes
+                    // Update Source Node
+                    nodeMap.putIfAbsent(sName, new GraphNodeDTO(sName, sName, sGroup, 0, 0));
+                    GraphNodeDTO sNode = nodeMap.get(sName);
+                    sNode.setSize(sNode.getSize() + w); // Pass the new calculated size
+                    sNode.setSentiment((sNode.getSentiment() + s) / 2);
 
-                    double weight = record.get("weight").asDouble();
-                    double sentiment = record.get("sentiment").asDouble();
+                    // 2. Update Target Node
+                    nodeMap.putIfAbsent(tName, new GraphNodeDTO(tName, tName, tGroup, 0, 0));
+                    GraphNodeDTO tNode = nodeMap.get(tName);
+                    tNode.setSize(tNode.getSize() + w); // Pass the new calculated size
+                    tNode.setSentiment((tNode.getSentiment() + s) / 2);
 
-                    // 1. Create or Update Source Node
-                    nodeMap.putIfAbsent(sourceName, new GraphNodeDTO(sourceName, sourceName, "Entity", 0, 0));
-                    GraphNodeDTO sNode = nodeMap.get(sourceName);
-                    sNode.setSize(sNode.getSize() + weight);
-                    sNode.setSentiment((sNode.getSentiment() + sentiment) / 2); // Simple rolling average
-
-                    // 2. Create or Update Target Node
-                    nodeMap.putIfAbsent(targetName, new GraphNodeDTO(targetName, targetName, "Entity", 0, 0));
-                    GraphNodeDTO tNode = nodeMap.get(targetName);
-                    tNode.setSize(tNode.getSize() + weight);
-                    tNode.setSentiment((tNode.getSentiment() + sentiment) / 2);
-
-                    // 3. Add the Link (The connection between them)
-                    GraphLinkDTO link = new GraphLinkDTO(sourceName, targetName, weight, sentiment);
-                    response.getLinks().add(link);
+                    // Add link (Order: source, target, value, sentiment)
+                    response.getLinks().add(new GraphLinkDTO(sName, tName, w, s));
                 }
                 return null;
             });
         }
-        response.getNodes().addAll(nodeMap.values());
+        response.setNodes(new ArrayList<>(nodeMap.values()));
         return response;
     }
 }

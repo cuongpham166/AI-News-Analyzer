@@ -19,6 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AnalysisServiceTest {
@@ -53,6 +54,7 @@ class AnalysisServiceTest {
     int topN;
     boolean isPositive;
     TopRadarDTO topRadarDTO;
+    GraphResponseDTO graphResponseDTO;
 
     @BeforeEach
     void setUp() {
@@ -71,6 +73,7 @@ class AnalysisServiceTest {
         topN = 2;
         isPositive = true;
         topRadarDTO = new TopRadarDTO();
+        graphResponseDTO = new GraphResponseDTO();
     }
 
     @Nested
@@ -312,6 +315,22 @@ class AnalysisServiceTest {
             //Assert
             assertSame(ioException,thrownException);
             verify(trendRepo).getTopicRadarWithRelativeInterval(intervalUnit, intervalAmount);
+        }
+    }
+
+    @Nested
+    class GetDiscoveryDataWithRelativeInterval{
+        @Test
+        void getDiscoveryDataWithRelativeInterval_shouldReturnGraphResponseDTOFromRepo(){
+            //Arrange
+            when(relationshipRepo.getDiscoveryData(intervalUnit, intervalAmount))
+                    .thenReturn(graphResponseDTO);
+            //Act
+            GraphResponseDTO result = analysisService.getDiscoveryDataWithRelativeInterval(intervalUnit,intervalAmount);
+
+            //Assert
+            assertEquals(graphResponseDTO, result);
+            verify(relationshipRepo).getDiscoveryData(intervalUnit, intervalAmount);
         }
     }
 }

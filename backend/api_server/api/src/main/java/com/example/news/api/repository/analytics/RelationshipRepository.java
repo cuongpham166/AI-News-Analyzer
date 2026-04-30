@@ -11,15 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.news.api.dto.analytics.DetailedEntityDTO;
+import com.example.news.api.dto.analytics.*;
+
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.QueryConfig;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
+
 import org.springframework.stereotype.Repository;
 
-import com.example.news.api.dto.analytics.EventTrackerDTO;
-import com.example.news.api.dto.analytics.Neo4jEntityDTO;
-import com.example.news.api.dto.analytics.PowerCoupleDTO;
 import com.example.news.api.dto.jpa.NewsDTO;
 import com.example.news.api.util.AggregationInterval;
 import com.example.news.api.util.AggregationMapping;
@@ -38,6 +39,7 @@ public class RelationshipRepository {
     private final DiscoveryQuery neo4jQuery;
     private final Driver neo4jDriver;
     private final DSLContext dsl;
+    private final AggregationInterval aggInterval;
 
     public RelationshipRepository(
         Connection pConnection,
@@ -45,7 +47,8 @@ public class RelationshipRepository {
         AggregationQuery aggQuery,
         DiscoveryQuery neo4jQuery,
         Driver neo4jDriver,
-        DSLContext dsl
+        DSLContext dsl,
+        AggregationInterval aggInterval
     ){
         this.pConnection = pConnection;
         this.aggMapping = aggMapping;
@@ -53,11 +56,12 @@ public class RelationshipRepository {
         this.neo4jQuery = neo4jQuery;
         this.neo4jDriver = neo4jDriver;
         this.dsl = dsl;
+        this.aggInterval = aggInterval;
     }
 
 
     public List<PowerCoupleDTO> getPowerCoupleWithRelativeInterval (String intervalUnit, int amount){
-        Timestamp[] result = AggregationInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
+        Timestamp[] result = this.aggInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
         Timestamp startRange = result[0];
         Timestamp endRange = result[1];
         
@@ -87,7 +91,7 @@ public class RelationshipRepository {
         
     }
     public List<EventTrackerDTO> getEventTrackerWithRelativeInterval (String intervalUnit, int amount){
-        Timestamp[] result = AggregationInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
+        Timestamp[] result = this.aggInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
         Timestamp startRange = result[0];
         Timestamp endRange = result[1];
 
@@ -149,7 +153,7 @@ public class RelationshipRepository {
 
         try (Session session = this.neo4jDriver.session()) {
             for(NewsDTO news : newsList){
-                if (news.getTopic_name() != null && !news.getTopic_name().trim().isEmpty()) {           
+                if (news.getTopic_name() != null && !news.getTopic_name().trim().isEmpty()) {
                     Timestamp timestamp = news.getPublishDate();
                     long epochMillis = timestamp.getTime();
 
@@ -223,5 +227,51 @@ public class RelationshipRepository {
                 .withConfig(QueryConfig.builder().withDatabase(System.getenv("NEO4J_DB")).build())
                 .execute();            
         }
+    }
+
+    public GraphResponseDTO getDiscoveryData(String intervalUnit, int amount){
+        GraphResponseDTO response = new GraphResponseDTO();
+
+        long[] rangeResult = this.aggInterval.computeEpochRangeRelativeForNeo4j(intervalUnit, amount);
+        long startRange = rangeResult[0];
+        long endRange = rangeResult[1];
+
+        Map<String, GraphNodeDTO> nodeMap = new HashMap<>();
+
+        try (Session session = this.neo4jDriver.session()) {
+            session.executeRead(tx -> {
+                Result result = tx.run(this.neo4jQuery.getDiscoveryGraphQuery(),
+                        Map.of("startTime", startRange, "endTime", endRange));
+
+                while (result.hasNext()) {
+                    Record record = result.next();
+
+                    String sourceName = record.get("source").asString();
+                    String targetName = record.get("target").asString();
+
+                    double weight = record.get("weight").asDouble();
+                    double sentiment = record.get("sentiment").asDouble();
+
+                    // 1. Create or Update Source Node
+                    nodeMap.putIfAbsent(sourceName, new GraphNodeDTO(sourceName, sourceName, "Entity", 0, 0));
+                    GraphNodeDTO sNode = nodeMap.get(sourceName);
+                    sNode.setSize(sNode.getSize() + weight);
+                    sNode.setSentiment((sNode.getSentiment() + sentiment) / 2); // Simple rolling average
+
+                    // 2. Create or Update Target Node
+                    nodeMap.putIfAbsent(targetName, new GraphNodeDTO(targetName, targetName, "Entity", 0, 0));
+                    GraphNodeDTO tNode = nodeMap.get(targetName);
+                    tNode.setSize(tNode.getSize() + weight);
+                    tNode.setSentiment((tNode.getSentiment() + sentiment) / 2);
+
+                    // 3. Add the Link (The connection between them)
+                    GraphLinkDTO link = new GraphLinkDTO(sourceName, targetName, weight, sentiment);
+                    response.getLinks().add(link);
+                }
+                return null;
+            });
+        }
+        response.getNodes().addAll(nodeMap.values());
+        return response;
     }
 }

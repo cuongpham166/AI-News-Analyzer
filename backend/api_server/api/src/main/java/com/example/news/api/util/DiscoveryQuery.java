@@ -55,4 +55,13 @@ public class DiscoveryQuery {
                 + "ON MATCH SET r.weight = r.weight + 1, r.last_seen = n.publish_date";
     }
 
+    public String getDiscoveryGraphQuery() {
+        return "MATCH (n:News)-[:MENTIONS]->(e:Entity) " +
+                "WHERE n.publish_date >= $startTime AND n.publish_date <= $endTime " +
+                "WITH n, e " +
+                "MATCH (n)-[:MENTIONS]->(other:Entity) " +
+                "WHERE id(e) < id(other) " +
+                "RETURN e.value AS source, other.value AS target, " +
+                "count(n) AS weight, avg(n.sentiment) AS sentiment";
+    }
 }

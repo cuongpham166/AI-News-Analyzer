@@ -15,15 +15,18 @@ import com.example.news.api.util.AggregationInterval;
 @Repository
 public class SpatialRepository {
     private final DSLContext dsl;
+    private final AggregationInterval aggInterval;
 
     public SpatialRepository(
-        DSLContext dsl
+        DSLContext dsl,
+        AggregationInterval aggInterval
     ){
         this.dsl = dsl;
+        this.aggInterval = aggInterval;
     }
 
     public List<SpatialMapDTO> getSpatialMapWithRelativeInterval(String intervalUnit, int amount) {
-        Timestamp[] result = AggregationInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
+        Timestamp[] result = this.aggInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
         Timestamp startRange = result[0];
         Timestamp endRange = result[1];
 

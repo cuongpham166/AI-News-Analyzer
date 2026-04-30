@@ -3,15 +3,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.example.news.api.dto.analytics.*;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.news.api.dto.analytics.EventTrackerDTO;
-import com.example.news.api.dto.analytics.GlobalEntityTrendsDTO;
-import com.example.news.api.dto.analytics.GlobalTrendsDTO;
-import com.example.news.api.dto.analytics.InferenceNews;
-import com.example.news.api.dto.analytics.PowerCoupleDTO;
-import com.example.news.api.dto.analytics.SpatialMapDTO;
-import com.example.news.api.dto.analytics.VolatilityIndexDTO;
 
 import com.example.news.api.service.AnalysisService;
 
@@ -55,7 +48,7 @@ public class AnalysisController {
     public List<SpatialMapDTO> getSpatialMapWithRelativeInterval (
         @RequestParam String intervalUnit, 
         @RequestParam int amount
-    )throws SQLException {
+    ){
         return this.analysisService.getSpatialMapWithRelativeInterval(intervalUnit, amount);
     }
 
@@ -63,7 +56,7 @@ public class AnalysisController {
     public List<PowerCoupleDTO> getPowerCoupleWithRelativeInterval (
         @RequestParam String intervalUnit, 
         @RequestParam int amount
-    )throws SQLException {
+    ){
         return this.analysisService.getPowerCoupleWithRelativeInterval(intervalUnit, amount);
     }
 
@@ -71,7 +64,7 @@ public class AnalysisController {
     public List<EventTrackerDTO> getEventTrackerWithRelativeInterval (
         @RequestParam String intervalUnit, 
         @RequestParam int amount
-    )throws SQLException {
+    ){
         return this.analysisService.getEventTrackerWithRelativeInterval(intervalUnit, amount);
     }
 
@@ -79,7 +72,24 @@ public class AnalysisController {
     public List<VolatilityIndexDTO> getVolatilityIndexWithRelativeInterval (
         @RequestParam String intervalUnit, 
         @RequestParam int amount
-    )throws SQLException {
+    ){
         return this.analysisService.getVolatilityIndexWithRelativeInterval(intervalUnit, amount);
     }
+
+    @GetMapping("/top_radar")
+    public TopRadarDTO getTopicRadarWithRelativeInterval(
+            @RequestParam String intervalUnit,
+            @RequestParam int amount
+    ) throws IOException{
+        return this.analysisService.getTopicRadarWithRelativeInterval(intervalUnit, amount);
+    }
+
+    @GetMapping("/discovery")
+    public GraphResponseDTO getDiscoveryDataWithRelativeInterval(
+            @RequestParam String intervalUnit,
+            @RequestParam int amount
+    ){
+        return this.analysisService.getDiscoveryDataWithRelativeInterval(intervalUnit, amount);
+    }
+
 }

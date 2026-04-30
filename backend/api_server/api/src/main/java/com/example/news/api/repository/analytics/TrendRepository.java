@@ -25,19 +25,22 @@ public class TrendRepository {
     private final ElasticsearchClient esClient;
     private final AggregationMapping aggMapping;
     private final AggregationRequest aggRequest;
+    private final AggregationInterval aggInterval;
 
     public TrendRepository(
         ElasticsearchClient esClient,
         AggregationMapping aggMapping,
-        AggregationRequest aggRequest
+        AggregationRequest aggRequest,
+        AggregationInterval aggInterval
     ){
         this.esClient = esClient;
         this.aggMapping = aggMapping;
         this.aggRequest = aggRequest;
+        this.aggInterval = aggInterval;
     }
 
     public GlobalTrendsDTO getGlobalTrendsWithRelativeInterval (String intervalUnit, int amount) throws IOException {
-        long[] result = AggregationInterval.computeEpochRangeRelative(intervalUnit,amount);
+        long[] result = this.aggInterval.computeEpochRangeRelative(intervalUnit,amount);
         long startEpoch = result[0];
         long endEpoch   = result[1];
         SearchResponse<Void> response = getGlobalTrends(startEpoch,endEpoch,intervalUnit);
@@ -45,14 +48,14 @@ public class TrendRepository {
     }
 
     public SearchResponse<Void> getGlobalTrends (long startEpoch,long endEpoch, String intervalUnit) throws IOException {
-        CalendarInterval intervalEnum = AggregationInterval.mapInterval(intervalUnit);
+        CalendarInterval intervalEnum = this.aggInterval.mapInterval(intervalUnit);
         SearchRequest searchRequest = aggRequest.getGlobalTrendsRequest(startEpoch,endEpoch,intervalEnum);
         return esClient.search(searchRequest, Void.class);
     }
 
 
     public GlobalEntityTrendsDTO getGlobalEntityWithRelativeInterval (String intervalUnit, int amount) throws IOException {
-        long[] result = AggregationInterval.computeEpochRangeRelative(intervalUnit,amount);
+        long[] result = this.aggInterval.computeEpochRangeRelative(intervalUnit,amount);
         long startEpoch = result[0];
         long endEpoch   = result[1];
         SearchResponse<Void> response = getGlobalEntityTrends(startEpoch,endEpoch,intervalUnit);
@@ -60,14 +63,14 @@ public class TrendRepository {
     }
 
     public SearchResponse<Void> getGlobalEntityTrends (long startEpoch,long endEpoch, String intervalUnit) throws IOException {
-        CalendarInterval intervalEnum = AggregationInterval.mapInterval(intervalUnit);
+        CalendarInterval intervalEnum = this.aggInterval.mapInterval(intervalUnit);
         SearchRequest searchRequest = aggRequest.getGlobalEntitiesTrendsRequest(startEpoch,endEpoch,intervalEnum);
         return esClient.search(searchRequest, Void.class);
     }
 
     public List<InferenceNews> getImpactArticlesWithRelativeInterval(String intervalUnit, int amount, int topN, boolean isPositive) throws IOException {
         List<InferenceNews> allNews = new ArrayList<>();
-        long[] result = AggregationInterval.computeEpochRangeRelative(intervalUnit,amount);
+        long[] result = this.aggInterval.computeEpochRangeRelative(intervalUnit,amount);
         long startEpoch = result[0];
         long endEpoch   = result[1];   
         SearchRequest searchRequest = aggRequest.getImpactArticlesRequest(startEpoch,endEpoch,topN, isPositive);
@@ -80,7 +83,7 @@ public class TrendRepository {
     }
 
     public TopRadarDTO getTopicRadarWithRelativeInterval (String intervalUnit, int amount) throws IOException {
-        long[] result = AggregationInterval.computeEpochRangeRelative(intervalUnit,amount);
+        long[] result = this.aggInterval.computeEpochRangeRelative(intervalUnit,amount);
         long startEpoch = result[0];
         long endEpoch   = result[1];
         SearchResponse<Void> response = getTopicRadar(startEpoch,endEpoch);

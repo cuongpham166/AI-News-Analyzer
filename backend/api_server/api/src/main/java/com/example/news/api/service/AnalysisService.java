@@ -4,16 +4,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.example.news.api.dto.analytics.*;
 import org.springframework.stereotype.Service;
 
-import com.example.news.api.dto.analytics.EventTrackerDTO;
-import com.example.news.api.dto.analytics.GlobalEntityTrendsDTO;
-import com.example.news.api.dto.analytics.GlobalTrendsDTO;
-import com.example.news.api.dto.analytics.InferenceNews;
-import com.example.news.api.dto.analytics.PowerCoupleDTO;
-import com.example.news.api.dto.analytics.SpatialMapDTO;
-import com.example.news.api.dto.analytics.TopRadarDTO;
-import com.example.news.api.dto.analytics.VolatilityIndexDTO;
 import com.example.news.api.repository.analytics.RelationshipRepository;
 import com.example.news.api.repository.analytics.SentimentRepository;
 import com.example.news.api.repository.analytics.SpatialRepository;
@@ -69,5 +62,9 @@ public class AnalysisService {
 
     public TopRadarDTO getTopicRadarWithRelativeInterval (String intervalUnit, int amount) throws IOException {
         return this.trendRepo.getTopicRadarWithRelativeInterval(intervalUnit, amount);
+    }
+
+    public GraphResponseDTO getDiscoveryDataWithRelativeInterval(String intervalUnit, int amount){
+        return this.relationshipRepo.getDiscoveryData(intervalUnit, amount);
     }
 }

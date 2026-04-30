@@ -86,7 +86,7 @@ public class RelationshipRepository {
 
         
     }
-    public List<EventTrackerDTO> getEventTrackerWithRelativeInterval (String intervalUnit, int amount)throws SQLException {
+    public List<EventTrackerDTO> getEventTrackerWithRelativeInterval (String intervalUnit, int amount){
         Timestamp[] result = AggregationInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
         Timestamp startRange = result[0];
         Timestamp endRange = result[1];

@@ -22,6 +22,11 @@ public class NewsController {
         return this.metadataService.getAllNews(limit);
     }
 
+    @GetMapping("/all/source")
+    public List<NewsDTO> getAllNewsBySourceId(@RequestParam int sourceId) {
+        return this.metadataService.getAllNewsBySourceId(sourceId);
+    }
+
     @GetMapping("/detail")
     public DetailedNewsDTO getNewsByLink( @RequestParam String link) {
         return this.metadataService.getDetailedNewsByLink(link);

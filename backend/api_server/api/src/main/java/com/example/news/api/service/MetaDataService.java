@@ -6,6 +6,8 @@ import com.example.news.api.dto.analytics.DetailedEntityDTO;
 import com.example.news.api.entity.NewsEntity;
 import com.example.news.api.repository.analytics.RelationshipRepository;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.news.api.dto.jpa.DetailedNewsDTO;
@@ -32,10 +34,23 @@ public class MetaDataService {
 
 
     public List<NewsDTO> getAllNews(int limit) {
-        return this.newsRepo.findAllWithRelations(PageRequest.of(0, limit))
+        Pageable pageable = PageRequest.of(0, limit);
+        return this.newsRepo.findAllWithRelations(pageable)
             .stream()
             .map(this.newsMapper::toDTO)
             .toList();
+    }
+
+    public List<NewsDTO> getAllNewsBySourceId(int sourceId){
+        Pageable pageable = PageRequest.of(
+                0, // page index (0 = first page)
+                10,
+                Sort.by(Sort.Direction.DESC, "publishDate")
+        );
+        return this.newsRepo.findAllBySourceId(sourceId, pageable)
+                .stream()
+                .map(this.newsMapper::toDTO)
+                .toList();
     }
 
     public DetailedNewsDTO getDetailedNewsByLink(String link) {

@@ -26,6 +26,7 @@ public class AnalysisService {
     private final SpatialRepository spatialRepo;
     private final SentimentRepository sentimentRepo;
     private final TrendRepository trendRepo;
+
     public AnalysisService(
         RelationshipRepository relationshipRepo,
         SpatialRepository spatialRepo,
@@ -38,44 +39,35 @@ public class AnalysisService {
         this.trendRepo = trendRepo;
     }
 
-    public List<SpatialMapDTO> getSpatialMapWithRelativeInterval (String intervalUnit, int amount)throws SQLException {
-        List<SpatialMapDTO> result = this.spatialRepo.getSpatialMapWithRelativeInterval(intervalUnit, amount);
-        return result;
+    public List<SpatialMapDTO> getSpatialMapWithRelativeInterval (String intervalUnit, int amount) {
+        return this.spatialRepo.getSpatialMapWithRelativeInterval(intervalUnit, amount);
     }
-
 
     public List<PowerCoupleDTO> getPowerCoupleWithRelativeInterval (String intervalUnit, int amount) {
-        List<PowerCoupleDTO> result = this.relationshipRepo.getPowerCoupleWithRelativeInterval(intervalUnit, amount);
-        return result;
+        return this.relationshipRepo.getPowerCoupleWithRelativeInterval(intervalUnit, amount);
     }
 
-    public List<EventTrackerDTO> getEventTrackerWithRelativeInterval (String intervalUnit, int amount)throws SQLException {
-        List <EventTrackerDTO> result = this.relationshipRepo.getEventTrackerWithRelativeInterval(intervalUnit, amount);
-        return result;
+    public List<EventTrackerDTO> getEventTrackerWithRelativeInterval (String intervalUnit, int amount) {
+        return this.relationshipRepo.getEventTrackerWithRelativeInterval(intervalUnit, amount);
     }
 
-    public List<VolatilityIndexDTO> getVolatilityIndexWithRelativeInterval (String intervalUnit, int amount)throws SQLException {
-        List <VolatilityIndexDTO> result = this.sentimentRepo.getVolatilityIndexWithRelativeInterval(intervalUnit, amount);
-        return result;
+    public List<VolatilityIndexDTO> getVolatilityIndexWithRelativeInterval (String intervalUnit, int amount) {
+        return this.sentimentRepo.getVolatilityIndexWithRelativeInterval(intervalUnit, amount);
     }
 
     public GlobalTrendsDTO getGlobalTrendsWithRelativeInterval (String intervalUnit, int amount) throws IOException {
-        GlobalTrendsDTO trendResult = this.trendRepo.getGlobalTrendsWithRelativeInterval(intervalUnit,amount);
-        return trendResult;
+        return this.trendRepo.getGlobalTrendsWithRelativeInterval(intervalUnit,amount);
     }
 
     public GlobalEntityTrendsDTO getGlobalEntityWithRelativeInterval (String intervalUnit, int amount) throws IOException {
-        GlobalEntityTrendsDTO trendResult = this.trendRepo.getGlobalEntityWithRelativeInterval(intervalUnit,amount);
-        return trendResult;
+        return this.trendRepo.getGlobalEntityWithRelativeInterval(intervalUnit,amount);
     }
 
     public List<InferenceNews> getImpactArticlesWithRelativeInterval(String intervalUnit, int amount, int topN, boolean isPositive) throws IOException {
-        List<InferenceNews> newsResult = this.trendRepo.getImpactArticlesWithRelativeInterval(intervalUnit,amount,topN,isPositive);
-        return newsResult;
+        return this.trendRepo.getImpactArticlesWithRelativeInterval(intervalUnit,amount,topN,isPositive);
     }
 
     public TopRadarDTO getTopicRadarWithRelativeInterval (String intervalUnit, int amount) throws IOException {
-        TopRadarDTO radarResult = this.trendRepo.getTopicRadarWithRelativeInterval(intervalUnit, amount);
-        return radarResult;
+        return this.trendRepo.getTopicRadarWithRelativeInterval(intervalUnit, amount);
     }
 }

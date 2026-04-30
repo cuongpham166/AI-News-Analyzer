@@ -41,15 +41,13 @@ public class TrendRepository {
         long startEpoch = result[0];
         long endEpoch   = result[1];
         SearchResponse<Void> response = getGlobalTrends(startEpoch,endEpoch,intervalUnit);
-        GlobalTrendsDTO trendResult = aggMapping.mapGlobalTrends(response);
-        return trendResult;
+        return aggMapping.mapGlobalTrends(response);
     }
 
     public SearchResponse<Void> getGlobalTrends (long startEpoch,long endEpoch, String intervalUnit) throws IOException {
         CalendarInterval intervalEnum = AggregationInterval.mapInterval(intervalUnit);
         SearchRequest searchRequest = aggRequest.getGlobalTrendsRequest(startEpoch,endEpoch,intervalEnum);
-        SearchResponse<Void> response = esClient.search(searchRequest, Void.class); 
-        return response;
+        return esClient.search(searchRequest, Void.class);
     }
 
 
@@ -58,15 +56,13 @@ public class TrendRepository {
         long startEpoch = result[0];
         long endEpoch   = result[1];
         SearchResponse<Void> response = getGlobalEntityTrends(startEpoch,endEpoch,intervalUnit);
-        GlobalEntityTrendsDTO trendResult = aggMapping.mapEntityAnalysis(response);
-        return trendResult;
+        return aggMapping.mapEntityAnalysis(response);
     }
 
     public SearchResponse<Void> getGlobalEntityTrends (long startEpoch,long endEpoch, String intervalUnit) throws IOException {
         CalendarInterval intervalEnum = AggregationInterval.mapInterval(intervalUnit);
         SearchRequest searchRequest = aggRequest.getGlobalEntitiesTrendsRequest(startEpoch,endEpoch,intervalEnum);
-        SearchResponse<Void> response = esClient.search(searchRequest, Void.class);
-        return response;
+        return esClient.search(searchRequest, Void.class);
     }
 
     public List<InferenceNews> getImpactArticlesWithRelativeInterval(String intervalUnit, int amount, int topN, boolean isPositive) throws IOException {
@@ -88,13 +84,11 @@ public class TrendRepository {
         long startEpoch = result[0];
         long endEpoch   = result[1];
         SearchResponse<Void> response = getTopicRadar(startEpoch,endEpoch);
-        TopRadarDTO radarResult = aggMapping.mapTopicRadar(response);
-        return radarResult;
+        return aggMapping.mapTopicRadar(response);
     }
 
     public SearchResponse<Void> getTopicRadar(long startEpoch,long endEpoch) throws IOException {
         SearchRequest searchRequest = aggRequest.getTopicRadarRequest(startEpoch,endEpoch);
-        SearchResponse<Void> response = esClient.search(searchRequest, Void.class);
-        return response;
+        return esClient.search(searchRequest, Void.class);
     }
 }

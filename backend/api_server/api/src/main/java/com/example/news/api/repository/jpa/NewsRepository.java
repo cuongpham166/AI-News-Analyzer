@@ -21,6 +21,8 @@ public interface NewsRepository extends JpaRepository<NewsEntity, Integer> {
         """)
     List<NewsEntity> findAllWithRelations(Pageable pageable);
 
+    List<NewsEntity> findAllBySourceId(int sourceId, Pageable pageable);
+
 
     @Query("""
     SELECT n FROM NewsEntity n

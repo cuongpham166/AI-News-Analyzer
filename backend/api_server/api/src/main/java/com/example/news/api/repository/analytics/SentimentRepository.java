@@ -21,7 +21,7 @@ public class SentimentRepository {
         this.dsl = dsl;
     }
 
-    public List<VolatilityIndexDTO> getVolatilityIndexWithRelativeInterval (String intervalUnit, int amount)throws SQLException {
+    public List<VolatilityIndexDTO> getVolatilityIndexWithRelativeInterval (String intervalUnit, int amount){
         Timestamp[] result = AggregationInterval.computeEpochRangeRelativeForSql(intervalUnit, amount);
         Timestamp startRange = result[0];
         Timestamp endRange = result[1];

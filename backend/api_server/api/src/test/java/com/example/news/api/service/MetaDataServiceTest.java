@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +50,8 @@ class MetaDataServiceTest {
     private DetailedNewsDTO detailedNewsDTO;
 
     private String link;
+    private int sourceId;
+    private Pageable pageable;
 
     @BeforeEach
     void setUp() {
@@ -61,6 +65,13 @@ class MetaDataServiceTest {
         detailedNewsDTO = new DetailedNewsDTO();
 
         link = "link";
+
+        sourceId = 1;
+        pageable = PageRequest.of(
+                0, // page index (0 = first page)
+                10,
+                Sort.by(Sort.Direction.DESC, "publishDate")
+        );
     }
 
     @Test
@@ -98,6 +109,41 @@ class MetaDataServiceTest {
         //Assert
         assertThat(result).isEmpty();
         verify(newsRepo).findAllWithRelations(PageRequest.of(0, limit));
+        verifyNoMoreInteractions(newsMapper);
+    }
+
+    @Test
+    void getAllNewsBySourceId_shouldReturnMappedDTOs(){
+        //Arrange
+        when(this.newsRepo.findAllBySourceId(sourceId, pageable))
+                .thenReturn(List.of(news1, news2));
+        when(this.newsMapper.toDTO(news1))
+                .thenReturn(dto1);
+        when(this.newsMapper.toDTO(news2))
+                .thenReturn(dto2);
+        //Act
+        List<NewsDTO> result = this.metaDataService.getAllNewsBySourceId(sourceId);
+
+        //Assert
+        assertThat(result).hasSize(2);
+        assertThat(result).containsExactly(dto1,dto2);
+        verify(newsRepo).findAllBySourceId(sourceId, pageable);
+        verify(newsMapper).toDTO(news1);
+        verify(newsMapper).toDTO(news2);
+        verifyNoMoreInteractions(newsRepo, newsMapper);
+    }
+
+    @Test
+    void getAllNewsBySourceId_shouldReturnMappedDTOs_WhenNoData(){
+        //Arrange
+        when(this.newsRepo.findAllBySourceId(sourceId, pageable))
+                .thenReturn(List.of());
+        //Act
+        List<NewsDTO> result = this.metaDataService.getAllNewsBySourceId(sourceId);
+
+        //Assert
+        assertThat(result).isEmpty();
+        verify(newsRepo).findAllBySourceId(sourceId,pageable);
         verifyNoMoreInteractions(newsMapper);
     }
 

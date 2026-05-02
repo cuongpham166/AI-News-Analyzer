@@ -10,9 +10,7 @@ import {
   Text,
   Stack,
 } from '@mantine/core';
-
 const entityTrendsLabels = [
-  { title: 'Crisis', color: SentimentColors.crisis },
   { title: 'Negative', color: SentimentColors.negative },
   { title: 'Positive', color: SentimentColors.postive },
   { title: 'Neutral', color: SentimentColors.neutral },
@@ -21,7 +19,6 @@ function EntityTrendsCard() {
   return (
     <Paper
       p='md'
-      h='calc(50vh - 60px)'
       style={{
         display: 'flex',
         flexDirection: 'column',

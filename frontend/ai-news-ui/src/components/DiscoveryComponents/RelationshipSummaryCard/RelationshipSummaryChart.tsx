@@ -66,9 +66,11 @@ const RelationshipSummaryChart: React.FC<Props> = (props) => {
           nodeAutoColorBy='group'
           linkWidth={(link) => link.value}
           linkColor={(link) =>
-            link.sentiment < 0
-              ? getColorCode(SentimentColors.crisis)
-              : getColorCode(SentimentColors.postive)
+            link.sentiment > 0
+              ? getColorCode(SentimentColors.postive)
+              : link.sentiment < 0
+                ? getColorCode(SentimentColors.negative)
+                : getColorCode(SentimentColors.neutral)
           }
           nodeVal={(node) => Math.log(node.size + 1) * 3}
           linkDirectionalParticles={2}
@@ -79,10 +81,16 @@ const RelationshipSummaryChart: React.FC<Props> = (props) => {
             const fontSize = 14 / globalScale;
             const radius = Math.max(Math.log(node.size + 1) * 3, 3);
 
+            let nodeColor = getColorCode(SentimentColors.neutral); // Default Neutral
+            if (node.sentiment > 0)
+              nodeColor = getColorCode(SentimentColors.postive); // Positive
+            if (node.sentiment < 0)
+              nodeColor = getColorCode(SentimentColors.negative); // Negative
+
             // Draw Node Circle
             ctx.beginPath();
             ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
-            ctx.fillStyle = node.color;
+            ctx.fillStyle = nodeColor;
             ctx.fill();
 
             // Draw Text
@@ -109,7 +117,7 @@ const RelationshipSummaryChart: React.FC<Props> = (props) => {
               y: start.y + (end.y - start.y) * 0.5,
             };
 
-            const label = `${link.sentiment > 0 ? '+' : ''}${link.sentiment.toFixed(2)}`;
+            const label = `W: ${link.value} | S: ${link.sentiment > 0 ? '+' : ''}${link.sentiment.toFixed(2)}`;
 
             // 3. Draw Background (White pill shape)
             const textWidth = ctx.measureText(label).width;
@@ -130,8 +138,10 @@ const RelationshipSummaryChart: React.FC<Props> = (props) => {
             ctx.textBaseline = 'middle';
             ctx.fillStyle =
               link.sentiment < 0
-                ? getColorCode(SentimentColors.crisis)
-                : getColorCode(SentimentColors.postive);
+                ? getColorCode(SentimentColors.negative)
+                : link.sentiment > 0
+                  ? getColorCode(SentimentColors.postive)
+                  : getColorCode(SentimentColors.neutral);
             ctx.fillText(label, textPos.x, textPos.y);
           }}
           // IMPORTANT: This prevents the text from flickering

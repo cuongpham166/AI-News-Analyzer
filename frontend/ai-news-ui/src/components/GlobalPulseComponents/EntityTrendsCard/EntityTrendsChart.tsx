@@ -12,12 +12,10 @@ import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
 import type { EntityTrendsChartData } from '../../../shared/interfaces/EntityTrend';
 import { fetchGlobalEntityTrends } from '../../../services/analysisService';
 import { aggregateEntities } from '../../../shared/utils/aggregateData';
-import { GlobalPulseContext } from '../../../shared/contexts/global_pulse/GlobalPulseContext';
 import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
 const getColor = (val) => {
-  if (val <= -0.6) return getColorCode(SentimentColors.crisis);
-  if (val < -0.1) return getColorCode(SentimentColors.negative);
-  if (val > 0.1) return getColorCode(SentimentColors.postive);
+  if (val < 0) return getColorCode(SentimentColors.negative);
+  if (val > 0) return getColorCode(SentimentColors.postive);
   return getColorCode(SentimentColors.neutral);
 };
 

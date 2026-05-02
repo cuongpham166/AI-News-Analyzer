@@ -21,8 +21,8 @@ function Sidebar() {
     { icon: GaugeIcon, label: 'Global Pulse', url: '/' },
     { icon: VectorThreeIcon, label: 'Dimensions & Risks', url: '/dimension' },
     { icon: TreeStructureIcon, label: 'Relationship', url: '/relationship' },
-    { icon: MagnifyingGlassIcon, label: 'Discovery' },
-    { icon: NewspaperIcon, label: 'News' },
+    { icon: MagnifyingGlassIcon, label: 'Discovery', url: '/discovery' },
+    { icon: NewspaperIcon, label: 'News', url: '/news' },
     { icon: HeartbeatIcon, label: 'Activity' },
     { icon: UserIcon, label: 'Profile' },
   ];

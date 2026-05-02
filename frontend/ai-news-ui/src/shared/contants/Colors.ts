@@ -1,8 +1,7 @@
 export const SentimentColors = {
-  crisis: '--mantine-color-red-9',
-  negative: '--mantine-color-red-4',
+  negative: '--mantine-color-red-9',
   postive: '--mantine-color-teal-9',
-  neutral: '--mantine-color-yellow-4',
+  neutral: '--mantine-color-gray-5',
 } as const;
 
 /*export const ThemeColors = {

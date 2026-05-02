@@ -44,7 +44,7 @@ const RelationshipSummaryTaskbar: React.FC<Props> = (props) => {
   };
 
   return (
-    <Taskbar taskbarTitle='Relationship Summary'>
+    <Taskbar taskbarTitle='Discovery'>
       <Group gap='sm' align='center'>
         <NumberInput
           name='time_value'

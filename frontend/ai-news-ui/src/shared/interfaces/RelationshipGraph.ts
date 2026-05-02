@@ -4,6 +4,7 @@ interface Node {
   group: string;
   size: number;
   sentiment: number;
+  color: string;
 }
 
 interface Link {

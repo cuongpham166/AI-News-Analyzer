@@ -21,11 +21,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       padding='md'
       // Force the Shell to be exactly the height of the window
       styles={{
-        root: { height: '100vh', display: 'flex', flexDirection: 'column' },
-        main: {
-          height: '100vh',
+        root: {
+          //height: '100vh',
           display: 'flex',
-          overflow: 'hidden',
+          flexDirection: 'column',
+        },
+        main: {
+          //height: '100vh',
+          display: 'flex',
+          //overflow: 'hidden',
           backgroundColor: ThemeColors.primaryBackground,
         },
       }}

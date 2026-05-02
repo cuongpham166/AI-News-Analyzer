@@ -72,7 +72,7 @@ const ImpactNewsList = (props: ImpactNewsListProps) => {
             color={
               sentiment == 'positive'
                 ? getColorCode(SentimentColors.postive)
-                : getColorCode(SentimentColors.crisis)
+                : getColorCode(SentimentColors.negative)
             }
             size='lg'
             radius='sm'

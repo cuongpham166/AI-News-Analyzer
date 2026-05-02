@@ -3,7 +3,7 @@ import type { ImpactNews } from '../shared/interfaces/ImpactNews';
 import type { EntityTrend } from '../shared/interfaces/EntityTrend';
 import type { GlobalTrend } from '../shared/interfaces/GlobalTrend';
 import type { RelationshipGraph } from '../shared/interfaces/RelationshipGraph';
-
+import type { PowerCouple } from '../shared/interfaces/PowerCouples';
 const API_URL = import.meta.env.VITE_API_ENDPOINT;
 
 export const fetchImpactNews = async (
@@ -91,6 +91,27 @@ export const fetchRelationshipGraphData = async (
     return response.data;
   } catch (error) {
     console.error('Error relationship graph data:', error);
+    return undefined;
+  }
+};
+
+export const fetchPowerCouples = async (
+  intervalUnit: string,
+  amount: number,
+): Promise<Array<PowerCouple>> => {
+  try {
+    const response = await axios.get<Array<PowerCouple>>(
+      `${API_URL}/analysis/power_couple`,
+      {
+        params: {
+          intervalUnit,
+          amount,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error power couple data:', error);
     return undefined;
   }
 };

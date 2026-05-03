@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { EntityRelationshipContext } from './EntityRelationshipContext';
+import { EntityRelationshipContext } from '../contexts/EntityRelationshipContext.ts';
 
 export const useEntityRelationship = () => {
   const context = useContext(EntityRelationshipContext);

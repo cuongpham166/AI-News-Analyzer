@@ -4,8 +4,8 @@ import type { EntityTrend } from '../shared/interfaces/EntityTrend';
 import type { GlobalTrend } from '../shared/interfaces/GlobalTrend';
 import type { RelationshipGraph } from '../shared/interfaces/RelationshipGraph';
 import type { PowerCouple } from '../shared/interfaces/PowerCouples';
-const API_URL = import.meta.env.VITE_API_ENDPOINT;
-
+//const API_URL = import.meta.env.VITE_API_ENDPOINT;
+const API_URL = 'http://localhost:8081/api';
 export const fetchImpactNews = async (
   intervalUnit: string,
   amount: number,
@@ -45,8 +45,7 @@ export const fetchGlobalEntityTrends = async (
         },
       },
     );
-    const result: EntityTrend = response.data;
-    return result;
+    return response.data;
   } catch (error) {
     console.error('Error fetching global entity trends:', error);
     return undefined;

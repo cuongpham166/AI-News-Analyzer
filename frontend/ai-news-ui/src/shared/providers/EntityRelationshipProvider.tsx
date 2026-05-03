@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
-import { EntityRelationshipContext } from './EntityRelationshipContext';
-import type { EntityRelationshipInterval } from '../../interfaces/intervals/EntityRelationshipInterval';
+import { EntityRelationshipContext } from '../contexts/EntityRelationshipContext.ts';
+import type { EntityRelationshipInterval } from '../interfaces/intervals/EntityRelationshipInterval.ts';
 
 type Props = {
   children: ReactNode;

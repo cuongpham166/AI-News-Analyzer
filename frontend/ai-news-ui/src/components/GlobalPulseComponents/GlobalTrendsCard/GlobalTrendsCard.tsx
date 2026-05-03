@@ -1,6 +1,6 @@
-import { ThemeColors } from '../../../shared/contants/Colors';
 import GlobalTrendsChart from './GlobalTrendsChart';
 import { Box, Paper, Title } from '@mantine/core';
+import { ThemeColors } from '@/shared/constants/Colors';
 
 function GlobalTrendsCard() {
   return (

@@ -5,17 +5,18 @@ import {
   Badge,
   Stack,
   Paper,
-  Button,
   Group,
   ActionIcon,
 } from '@mantine/core';
 
 import { PlusIcon } from '@phosphor-icons/react';
-import type { ImpactNews } from '../../../shared/interfaces/ImpactNews';
-import { fetchImpactNews } from '../../../services/analysisService';
-import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
-import { getColorCode } from '../../../shared/utils/getColorCode';
-import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
+import type { ImpactNews } from '@/shared/interfaces/ImpactNews';
+import { fetchImpactNews } from '@/services/analysisService';
+
+import { getColorCode } from '@/shared/utils/getColorCode';
+import { useGlobalPulse } from '@/shared/custom_hooks/useGlobalPulse.ts';
+import { SentimentColors, ThemeColors } from '@/shared/constants/Colors';
+
 const options = {
   weekday: 'long',
   year: 'numeric',

@@ -1,6 +1,7 @@
-import { Blockquote, Card, Paper, Stack, Text, Title } from '@mantine/core';
-import { ThemeColors } from '../../../shared/contants/Colors';
+import { Blockquote, Paper, Stack, Text, Title } from '@mantine/core';
+import { ThemeColors } from '@/shared/constants/Colors';
 import detailedNewsData from '../../../../test/DetailedNews';
+
 function DetailedNewsCard() {
   const isoString = detailedNewsData.publishDate;
   const publishedDate = new Date(isoString);
@@ -36,4 +37,5 @@ function DetailedNewsCard() {
     </Paper>
   );
 }
+
 export default DetailedNewsCard;

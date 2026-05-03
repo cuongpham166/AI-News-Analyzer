@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
-import { GlobalPulseContext } from './GlobalPulseContext';
-import type { GlobalPulseInterval } from '../../interfaces/intervals/GlobalPulseInterval';
+import { GlobalPulseContext } from '../contexts/GlobalPulseContext.ts';
+import type { GlobalPulseInterval } from '../interfaces/intervals/GlobalPulseInterval.ts';
 
 type Props = {
   children: ReactNode;

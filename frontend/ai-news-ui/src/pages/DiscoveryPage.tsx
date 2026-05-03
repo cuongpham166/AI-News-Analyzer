@@ -1,9 +1,7 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import RelationshipSummaryTaskbar from '../components/DiscoveryComponents/RelationshipSummaryTaskbar';
-import RelationshipSummaryCard from '../components/DiscoveryComponents/RelationshipSummaryCard';
-import RelationshipSummaryAnnotation from '../components/DiscoveryComponents/RelationshipSummaryAnnotation';
-import { Card, Grid, Stack, Text } from '@mantine/core';
+import RelationshipSummaryTaskbar from '@/components/DiscoveryComponents/RelationshipSummaryTaskbar';
+import RelationshipSummaryCard from '@/components/DiscoveryComponents/RelationshipSummaryCard';
+import RelationshipSummaryAnnotation from '@/components/DiscoveryComponents/RelationshipSummaryAnnotation';
+import { Grid, Stack } from '@mantine/core';
 
 function DiscoveryPage() {
   return (

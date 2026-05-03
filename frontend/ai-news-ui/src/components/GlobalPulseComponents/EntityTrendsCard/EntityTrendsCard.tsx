@@ -1,5 +1,4 @@
-import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
-import { getColorCode } from '../../../shared/utils/getColorCode';
+import { getColorCode } from '@/shared/utils/getColorCode';
 import EntityTrendsChart from './EntityTrendsChart';
 import {
   Box,
@@ -10,11 +9,14 @@ import {
   Text,
   Stack,
 } from '@mantine/core';
+import { SentimentColors, ThemeColors } from '@/shared/constants/Colors';
+
 const entityTrendsLabels = [
   { title: 'Negative', color: SentimentColors.negative },
   { title: 'Positive', color: SentimentColors.postive },
   { title: 'Neutral', color: SentimentColors.neutral },
 ];
+
 function EntityTrendsCard() {
   return (
     <Paper

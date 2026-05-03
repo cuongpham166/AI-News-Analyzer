@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { EntityRelationshipInterval } from '../../interfaces/intervals/EntityRelationshipInterval';
+import type { EntityRelationshipInterval } from '../interfaces/intervals/EntityRelationshipInterval.ts';
 
 type EntityRelationshipContextType = {
   entityRelationshipInterval: EntityRelationshipInterval;

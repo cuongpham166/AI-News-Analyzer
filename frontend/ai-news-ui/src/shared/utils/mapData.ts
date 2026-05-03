@@ -26,10 +26,11 @@ export const mapPowerCoupleData = (
 ): PowerCoupleChartData => {
   const MIN_STRENGTH = 2;
   const cleanedData = cleanPowerCoupleData(data);
-  const filtereddData = cleanedData.filter((d) => d.strength >= MIN_STRENGTH);
+  const filteredData = cleanedData.filter((d) => d.strength >= MIN_STRENGTH);
+  const slicedData = filteredData.slice(0,5);
   const nodeMap = new Map();
 
-  filtereddData.forEach(({ person, organization }) => {
+  slicedData.forEach(({ person, organization }) => {
     if (!nodeMap.has(person)) {
       nodeMap.set(person, { name: person, type: 'person' });
     }
@@ -39,15 +40,13 @@ export const mapPowerCoupleData = (
   });
 
   const nodes = Array.from(nodeMap.values());
-  console.log('mapPowerCoupleData_nodeMap', nodeMap);
-  console.log('mapPowerCoupleData_nodes', nodes);
 
   const getIndex = (name: string) => nodes.findIndex((n) => n.name === name);
 
   // aggregate duplicate links
   const linkMap = new Map();
 
-  filtereddData.forEach(({ person, organization, strength }) => {
+  slicedData.forEach(({ person, organization, strength }) => {
     const key = `${person}->${organization}`;
     if (!linkMap.has(key)) {
       linkMap.set(key, { source: person, target: organization, value: 0 });

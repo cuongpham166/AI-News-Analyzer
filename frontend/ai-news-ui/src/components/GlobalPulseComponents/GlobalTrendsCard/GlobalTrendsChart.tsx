@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Area,
   CartesianGrid,
@@ -12,11 +12,11 @@ import {
 } from 'recharts';
 import { RechartsDevtools } from '@recharts/devtools';
 import { Divider, Paper, Group, Text, Stack } from '@mantine/core';
-import type { GlobalTrend } from '../../../shared/interfaces/GlobalTrend';
-import { fetchGlobalTrends } from '../../../services/analysisService';
-import { getColorCode } from '../../../shared/utils/getColorCode';
-import { ThemeColors, TrendColors } from '../../../shared/contants/Colors';
-import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
+import type { GlobalTrend } from '@/shared/interfaces/GlobalTrend';
+import { fetchGlobalTrends } from '@/services/analysisService';
+import { getColorCode } from '@/shared/utils/getColorCode';
+import { ThemeColors, TrendColors } from '@/shared/constants/Colors';
+import { useGlobalPulse } from '@/shared/custom_hooks/useGlobalPulse.ts';
 
 const GlobalTrendsChart = () => {
   const [globalTrends, setGlobalTrends] = useState<GlobalTrend[]>([]);

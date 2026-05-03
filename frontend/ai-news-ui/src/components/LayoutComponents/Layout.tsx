@@ -1,15 +1,8 @@
 import React, { type ReactNode } from 'react';
-import {
-  AppShell,
-  AppShellFooter,
-  Burger,
-  Container,
-  Stack,
-  Title,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { ThemeColors } from '../../shared/contants/Colors';
+import { AppShell } from '@mantine/core';
 import Sidebar from './Sidebar';
+import { ThemeColors } from '@/shared/constants/Colors';
+
 interface LayoutProps {
   children: ReactNode;
 }

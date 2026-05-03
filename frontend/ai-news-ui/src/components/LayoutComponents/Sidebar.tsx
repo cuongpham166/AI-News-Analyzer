@@ -1,7 +1,6 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stack, Text, Button, NavLink, Group } from '@mantine/core';
+import { Stack, Text, Button, NavLink } from '@mantine/core';
 import {
   GaugeIcon,
   HeartbeatIcon,
@@ -13,7 +12,8 @@ import {
   NewspaperIcon,
   VectorThreeIcon,
 } from '@phosphor-icons/react';
-import { ThemeColors } from '../../shared/contants/Colors';
+import { ThemeColors } from '@/shared/constants/Colors';
+
 function Sidebar() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const navigate = useNavigate();

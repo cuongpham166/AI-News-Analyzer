@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { GlobalPulseContext } from './GlobalPulseContext';
+import { GlobalPulseContext } from '../contexts/GlobalPulseContext.ts';
 
 export const useGlobalPulse = () => {
   const context = useContext(GlobalPulseContext);

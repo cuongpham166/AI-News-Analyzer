@@ -1,10 +1,8 @@
 import { Autocomplete, Group, NativeSelect } from '@mantine/core';
 import { CaretDownIcon } from '@phosphor-icons/react';
-import { ThemeColors } from '../../../shared/contants/Colors';
+import { ThemeColors } from '@/shared/constants/Colors';
 
-type Props = {};
-
-const Searchbar: React.FC<Props> = (props) => {
+const Searchbar = () => {
   return (
     <Group gap='sm' align='center' style={{ flex: 2 }}>
       <NativeSelect

@@ -1,9 +1,9 @@
 import { Grid, Stack } from '@mantine/core';
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import Taskbar from '../components/generic/Taskbar';
-import DetailedNewsCard from '../components/DetailedNewsPageComponents/DetailedNewsCard';
-import DetailedNewsMetaCard from '../components/DetailedNewsPageComponents/DetailedNewsMetaCard';
+
+import Taskbar from '@/components/generic/Taskbar';
+import DetailedNewsCard from '@/components/DetailedNewsPageComponents/DetailedNewsCard';
+import DetailedNewsMetaCard from '@/components/DetailedNewsPageComponents/DetailedNewsMetaCard';
+
 function DetailedNewsPage() {
   return (
     <Stack>

@@ -1,20 +1,8 @@
-import * as React from 'react';
-import { useState, useContext } from 'react';
-import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
-import {
-  Box,
-  Paper,
-  Title,
-  Text,
-  Group,
-  ColorSwatch,
-  Card,
-  Stack,
-} from '@mantine/core';
+import { Box, Paper, Title, Text, Card, Stack } from '@mantine/core';
 import RelationshipSummaryChart from './RelationshipSummaryChart';
-type Props = {};
+import { ThemeColors } from '@/shared/constants/Colors';
 
-const RelationshipSummaryCard: React.FC<Props> = (props) => {
+const RelationshipSummaryCard = () => {
   return (
     <Card withBorder padding='0' style={{ height: '100%', overflow: 'hidden' }}>
       <Stack style={{ flex: 1 }} gap='sm'>

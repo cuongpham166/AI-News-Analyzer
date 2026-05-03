@@ -1,18 +1,12 @@
-import * as React from 'react';
-import { useState, useContext } from 'react';
-import { GlobalPulseContext } from '../../../shared/contexts/global_pulse/GlobalPulseContext';
+import { useState } from 'react';
 import { NumberInput, NativeSelect, Button, Group } from '@mantine/core';
-import {
-  ArrowRightIcon,
-  CaretDownIcon,
-  UserCircleIcon,
-} from '@phosphor-icons/react';
-import { ThemeColors } from '../../../shared/contants/Colors';
-import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
-import Taskbar from '../../generic/Taskbar';
-type Props = {};
+import { ArrowRightIcon, CaretDownIcon } from '@phosphor-icons/react';
 
-const GlobalPulseTaskbar: React.FC<Props> = (props) => {
+import { useGlobalPulse } from '@/shared/custom_hooks';
+import Taskbar from '../../generic/Taskbar';
+import { ThemeColors } from '@/shared/constants/Colors';
+
+const GlobalPulseTaskbar = () => {
   const [intervalUnit, setIntervalUnit] = useState<string>('month');
   const [intervalAmount, setIntervalAmount] = useState<number>(6);
   const { globalPulseInterval, setGlobalPulseInterval } = useGlobalPulse();

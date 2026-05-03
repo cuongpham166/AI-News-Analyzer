@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Tooltip, ResponsiveContainer, Treemap } from 'recharts';
 import {
   Divider,
@@ -7,12 +7,14 @@ import {
   Text as MantineText,
   Stack,
 } from '@mantine/core';
-import { getColorCode } from '../../../shared/utils/getColorCode';
-import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
-import type { EntityTrendsChartData } from '../../../shared/interfaces/EntityTrend';
-import { fetchGlobalEntityTrends } from '../../../services/analysisService';
-import { aggregateEntities } from '../../../shared/utils/aggregateData';
-import { useGlobalPulse } from '../../../shared/contexts/global_pulse/useGlobalPulse';
+import { getColorCode } from '@/shared/utils/getColorCode';
+
+import type { EntityTrendsChartData } from '@/shared/interfaces/EntityTrend';
+import { fetchGlobalEntityTrends } from '@/services/analysisService';
+import { aggregateEntities } from '@/shared/utils/aggregateData';
+import { useGlobalPulse } from '@/shared/custom_hooks/useGlobalPulse.ts';
+import { SentimentColors, ThemeColors } from '@/shared/constants/Colors';
+
 const getColor = (val) => {
   if (val < 0) return getColorCode(SentimentColors.negative);
   if (val > 0) return getColorCode(SentimentColors.postive);

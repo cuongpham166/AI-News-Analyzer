@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
 import Searchbar from '../Searchbar';
 import { Group, Paper, Title } from '@mantine/core';
-import { ThemeColors } from '../../../shared/contants/Colors';
+import { ThemeColors } from '@/shared/constants/Colors';
 
 type Props = {
   children: ReactNode;

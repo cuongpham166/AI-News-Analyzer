@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { NumberInput, NativeSelect, Button, Group } from '@mantine/core';
 import { ArrowRightIcon, CaretDownIcon } from '@phosphor-icons/react';
-import Taskbar from '../../../generic/Taskbar';
-import { ThemeColors } from '../../../../shared/contants/Colors';
-type Props = {};
 
-const PowerCoupleTaskbar: React.FC<Props> = (props) => {
+import Taskbar from '../../generic/Taskbar';
+import { ThemeColors } from '@/shared/constants/Colors';
+
+const RelationshipTaskbar = () => {
   const [intervalUnit, setIntervalUnit] = useState<string>('month');
   const [intervalAmount, setIntervalAmount] = useState<number>(6);
 
@@ -36,7 +36,7 @@ const PowerCoupleTaskbar: React.FC<Props> = (props) => {
   };
 
   return (
-    <Taskbar taskbarTitle='Power Couple'>
+    <Taskbar taskbarTitle='Relationship Summary11'>
       <Group gap='sm' align='center'>
         <NumberInput
           name='time_value'
@@ -81,4 +81,4 @@ const PowerCoupleTaskbar: React.FC<Props> = (props) => {
   );
 };
 
-export default PowerCoupleTaskbar;
+export default RelationshipTaskbar;

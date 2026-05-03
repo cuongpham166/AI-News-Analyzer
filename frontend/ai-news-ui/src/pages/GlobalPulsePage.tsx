@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import { Grid, Stack } from '@mantine/core';
-import GlobalPulseTaskbar from '../components/GlobalPulseComponents/GlobalPulseTaskbar';
-import GlobalTrendsCard from '../components/GlobalPulseComponents/GlobalTrendsCard';
-import EntityTrendsCard from '../components/GlobalPulseComponents/EntityTrendsCard';
-import ImpactNewsList from '../components/GlobalPulseComponents/ImpactNewsList';
+import GlobalPulseTaskbar from '@/components/GlobalPulseComponents/GlobalPulseTaskbar';
+import GlobalTrendsCard from '@/components/GlobalPulseComponents/GlobalTrendsCard';
+import EntityTrendsCard from '@/components/GlobalPulseComponents/EntityTrendsCard';
+import ImpactNewsList from '@/components/GlobalPulseComponents/ImpactNewsList';
 
 function GlobalPulsePage() {
   return (
@@ -27,4 +26,5 @@ function GlobalPulsePage() {
     </Stack>
   );
 }
+
 export default GlobalPulsePage;

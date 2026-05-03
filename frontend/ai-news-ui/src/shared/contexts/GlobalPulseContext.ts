@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { GlobalPulseInterval } from '../../interfaces/intervals/GlobalPulseInterval';
+import type { GlobalPulseInterval } from '../interfaces/intervals/GlobalPulseInterval.ts';
 
 type GlobalPulseContextType = {
   globalPulseInterval: GlobalPulseInterval;

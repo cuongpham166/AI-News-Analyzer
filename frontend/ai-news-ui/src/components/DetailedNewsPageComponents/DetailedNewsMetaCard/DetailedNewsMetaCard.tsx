@@ -1,5 +1,5 @@
 import { Paper, Stack, Title } from '@mantine/core';
-import { ThemeColors } from '../../../shared/contants/Colors';
+import { ThemeColors } from '@/shared/constants/Colors';
 
 function DetailedNewsMetaCard() {
   return (
@@ -19,4 +19,5 @@ function DetailedNewsMetaCard() {
     </Paper>
   );
 }
+
 export default DetailedNewsMetaCard;

@@ -1,16 +1,14 @@
-import * as React from 'react';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
-import { Paper, Title, Text } from '@mantine/core';
+
 import ForceGraph2D, { type ForceGraphMethods } from 'react-force-graph-2d';
 import { useElementSize } from '@mantine/hooks';
 import { fetchRelationshipGraphData } from '../../../services/analysisService';
 import type { RelationshipGraph } from '../../../shared/interfaces/RelationshipGraph';
 import { getColorCode } from '../../../shared/utils/getColorCode';
-import { useEntityRelationship } from '../../../shared/contexts/entity_relationship/useEntityRelationship';
-type Props = {};
+import { useEntityRelationship } from '../../../shared/custom_hooks/useEntityRelationship.ts';
+import { SentimentColors } from '@/shared/constants/Colors';
 
-const RelationshipSummaryChart: React.FC<Props> = (props) => {
+const RelationshipSummaryChart = () => {
   const { entityRelationshipInterval } = useEntityRelationship();
   const { ref, width, height } = useElementSize();
   const [relationshipGraph, setRelationshipGraph] =

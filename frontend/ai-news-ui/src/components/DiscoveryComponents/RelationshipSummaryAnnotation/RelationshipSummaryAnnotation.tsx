@@ -4,14 +4,14 @@ import {
   Title,
   Stack,
   Group,
-  Divider,
-  ThemeIcon,
   ColorSwatch,
   Paper,
 } from '@mantine/core';
-import { SentimentColors, ThemeColors } from '../../../shared/contants/Colors';
-import { getColorCode } from '../../../shared/utils/getColorCode';
+
+import { getColorCode } from '@/shared/utils/getColorCode';
 import { GraphIcon, LineSegmentIcon, CircleIcon } from '@phosphor-icons/react';
+import { SentimentColors, ThemeColors } from '@/shared/constants/Colors';
+
 const RelationshipSummaryAnnotation = () => {
   return (
     <Card withBorder padding='0' style={{ height: '100%', overflow: 'hidden' }}>

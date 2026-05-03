@@ -1,13 +1,12 @@
-import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { NumberInput, NativeSelect, Button, Group } from '@mantine/core';
 import { ArrowRightIcon, CaretDownIcon } from '@phosphor-icons/react';
-import { ThemeColors } from '../../../shared/contants/Colors';
-import { useEntityRelationship } from '../../../shared/contexts/entity_relationship/useEntityRelationship';
-import Taskbar from '../../generic/Taskbar';
-type Props = {};
 
-const RelationshipSummaryTaskbar: React.FC<Props> = (props) => {
+import { useEntityRelationship } from '@/shared/custom_hooks';
+import Taskbar from '../../generic/Taskbar';
+import { ThemeColors } from '@/shared/constants/Colors';
+
+const RelationshipSummaryTaskbar = () => {
   const [intervalUnit, setIntervalUnit] = useState<string>('month');
   const [intervalAmount, setIntervalAmount] = useState<number>(6);
   const { entityRelationshipInterval, setEntityRelationshipInterval } =

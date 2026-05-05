@@ -17,7 +17,7 @@ class InferenceService:
         inference_results = []
         for article in articles:
             summary = self.summarization_analyzer.analyze_input([article["text"]])
-            
+
             if len(article["text"])<1000:
                 sentiment_input = [article["text"]]
             else:
@@ -38,7 +38,7 @@ class InferenceService:
                 "source":article["source"],
             }
             inference_results.append(prediction_record)
-            
+
         merged_data = [dict(item1, **item2) for item1, item2 in zip(articles, inference_results)]
         processed_inference_data = self.process_inference(merged_data)
         return processed_inference_data

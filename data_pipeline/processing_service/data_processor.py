@@ -1,25 +1,23 @@
-from bs4 import BeautifulSoup
-import ftfy
-from rapidfuzz import fuzz
 from langdetect import detect
 from newspaper import Article
 import tldextract
 from datetime import datetime
-import hashlib
+
 import json
 import asyncio
 from nats.aio.client import Client as NATS
-import nats 
+import nats
 from email.utils import parsedate_to_datetime
 
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 nats_url = os.getenv("NATS_URL")
 
-STREAM_NAME = "ARTICLES"
-RAW_SUBJECT = "articles.raw"
-ENRICHED_SUBJECT = "articles.enriched"
+from data_pipeline.nats.client import create_js
+from data_pipeline.nats.streams import ensure_stream, ENRICHED_SUBJECT, RAW_SUBJECT
+
 
 class DataProcessor:
     def __init__(self, js=None):
@@ -29,10 +27,10 @@ class DataProcessor:
     async def publish_article(self, article: dict):
         print("publish_article", article)
         await self.js.publish(
-            ENRICHED_SUBJECT, 
+            ENRICHED_SUBJECT,
             json.dumps(article).encode()
         )
-        
+
     def is_duplicate(self, link):
         return link in self.enriched_links
 
@@ -60,49 +58,48 @@ class DataProcessor:
                 timestamp = article_obj.publish_date.timestamp()
             else:
                 timestamp = datetime.now().timestamp()
-            
+
             # Ensure timestamp is an integer (epoch seconds)
             timestamp = int(timestamp)
-            
+
             ext = tldextract.extract(link)
             domain_name = (ext.domain).upper()
 
             enriched_article = {
                 "title": article_obj.title,
                 "publish_date": timestamp,
-                "source":domain_name,
+                "source": domain_name,
                 "link": link,
                 "language": detect(article_obj.text[:500]),
                 "text": article_obj.text
             }
             self.enriched_links.add(link)
             await self.publish_article(enriched_article)
-            #print(f"Published enriched article: {article_obj.title}")
-            #print(f"Published enriched article: {enriched_article}")
             await msg.ack()
         except Exception as e:
             print(f"Error processing article {link}: {e}")
-            await msg.term()
+            await msg.nak(delay=5)
 
-    async def retrieve_raw_articles(self):
-        sub = await self.js.subscribe(RAW_SUBJECT, durable="raw-articles-consumer",deliver_policy="new",manual_ack=True)
+    async def run(self):
+        sub = await self.js.subscribe(
+            RAW_SUBJECT,
+            durable="raw-articles-consumer",
+            deliver_policy="all",
+            ack_wait=30,
+            max_deliver=5,
+            manual_ack=True,
+        )
         print(f"Subscribed to {RAW_SUBJECT}. Waiting for messages...")
         async for msg in sub.messages:
             await self.process_message(msg)
 
-async def ensure_stream(js):
-    try:
-        await js.stream_info(STREAM_NAME)
-    except NotFoundError:
-        await js.add_stream(name=STREAM_NAME, subjects=[RAW_SUBJECT, ENRICHED_SUBJECT])
-        print(f"Stream '{STREAM_NAME}' created")
 
 async def main():
-    nc = await nats.connect(nats_url)
-    js = nc.jetstream()
+    js = await create_js(nats_url)
     await ensure_stream(js)
     processor = DataProcessor(js)
-    await processor.retrieve_raw_articles()
+    await processor.run()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

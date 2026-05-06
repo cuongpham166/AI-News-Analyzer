@@ -7,17 +7,15 @@ import hashlib
 from nats.js.errors import NotFoundError
 
 from ai.inference.inference_service.inference_processor import InferenceProcessor
-
+from ai.responses.inference_news_response import InferenceNewsResponse
 import os
 from dotenv import load_dotenv
 
+from data_pipeline.nats.client import create_js
+from data_pipeline.nats.streams import ensure_stream, ENRICHED_SUBJECT, AI_SUBJECT, STREAM_NAME
+
 load_dotenv()
 nats_url = os.getenv("NATS_URL")
-
-STREAM_NAME = "ARTICLES"
-RAW_SUBJECT = "articles.raw"
-ENRICHED_SUBJECT = "articles.enriched"
-AI_SUBJECT = "articles.ai"
 
 semaphore = asyncio.Semaphore(4)  # allow 4 concurrent inferences
 
@@ -25,55 +23,56 @@ semaphore = asyncio.Semaphore(4)  # allow 4 concurrent inferences
 class InferenceConsumer:
     def __init__(self, js=None):
         self.js = js
-        self.inference_service = InferenceProcessor()
+        self.inference_processor = InferenceProcessor()
 
-    async def publish_article(self, article: dict):
+    async def publish_article(self, article: InferenceNewsResponse):
         await self.js.publish(
             AI_SUBJECT,
-            json.dumps(article).encode()
+            article.model_dump_json().encode()
         )
 
     async def process_message(self, msg):
         processed_article = json.loads(msg.data.decode())
         try:
-            inference_result = self.inference_service.analyze([processed_article])
-
-            await self.publish_article(inference_result[0])
-            await msg.ack()
+            inference_result = self.inference_processor.analyze([processed_article]).results
+            for res in inference_result:
+                inference_news = InferenceNewsResponse(
+                    link=res.link,
+                    summary=res.summarization,
+                    sentiment_label=res.sentiment.label,
+                    sentiment=res.sentiment.score,
+                    topic=res.classification.topic,
+                    entities=res.ner.entities
+                )
+                await self.publish_article(inference_news)
+                await msg.ack()
 
         except Exception as e:
             print(f"Error processing article: {e}")
             await msg.term()
 
-    async def retrieve_enriched_articles(self):
-
+    async def run(self):
         try:
             await self.js.delete_consumer(STREAM_NAME, "enriched-articles-consumer-1")
         except Exception:
             pass
 
-        sub = await self.js.subscribe(ENRICHED_SUBJECT, durable="enriched-articles-consumer-1", deliver_policy="new",
-                                      manual_ack=True)
+        sub = await self.js.subscribe(
+            ENRICHED_SUBJECT,
+            durable="enriched-articles-consumer-1",
+            deliver_policy="all",
+            manual_ack=True
+        )
         print(f"Subscribed to {ENRICHED_SUBJECT}. Waiting for messages...")
         async for msg in sub.messages:
-            # print("Inference_Bridge:retrieve_enriched_articles: ",json.loads(msg.data.decode()))
             await self.process_message(msg)
 
 
-async def ensure_stream(js):
-    try:
-        await js.stream_info(STREAM_NAME)
-    except NotFoundError:
-        await js.add_stream(name=STREAM_NAME, subjects=[RAW_SUBJECT, ENRICHED_SUBJECT, AI_SUBJECT])
-        print(f"Stream '{STREAM_NAME}' created")
-
-
 async def main():
-    nc = await nats.connect(nats_url)
-    js = nc.jetstream()
+    js = await create_js(nats_url)
     await ensure_stream(js)
-    inference_bridge = InferenceConsumer(js)
-    await inference_bridge.retrieve_enriched_articles()
+    inference_consumer = InferenceConsumer(js)
+    await inference_consumer.run()
 
 
 if __name__ == "__main__":

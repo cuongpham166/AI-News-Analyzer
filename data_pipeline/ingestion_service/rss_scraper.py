@@ -10,16 +10,17 @@ import asyncio
 import random
 import aiohttp
 from nats.aio.client import Client as NATS
-import nats 
+import nats
 
 import os
 from dotenv import load_dotenv
+
+from data_pipeline.nats.client import create_js
+from data_pipeline.nats.streams import ensure_stream, RAW_SUBJECT
+
 load_dotenv()
 nats_url = os.getenv("NATS_URL")
 
-STREAM_NAME = "ARTICLES"
-RAW_SUBJECT = "articles.raw"
-ENRICHED_SUBJECT = "articles.enriched"
 
 class RssScraper:
     def __init__(self, rss_urls, js=None, poll_interval=300):
@@ -28,11 +29,13 @@ class RssScraper:
         self.seen_links = set()
         self.poll_interval = poll_interval
 
-
     async def publish_article(self, article: dict):
         try:
             await asyncio.wait_for(
-                self.js.publish(RAW_SUBJECT,json.dumps(article).encode()),
+                self.js.publish(
+                    RAW_SUBJECT,
+                    json.dumps(article).encode()
+                ),
                 timeout=10
             )
         except asyncio.TimeoutError:
@@ -47,7 +50,7 @@ class RssScraper:
         except Exception as e:
             print(f"Error fetching {url}: {e}")
             return None
-        
+
     async def scrape_once(self):
         async with aiohttp.ClientSession() as session:
             tasks = [self.fetch_feed(session, url) for url in self.rss_urls]
@@ -86,16 +89,8 @@ class RssScraper:
             await asyncio.sleep(self.poll_interval)
 
 
-async def ensure_stream(js):
-    try:
-        await js.stream_info(STREAM_NAME)
-    except NotFoundError:
-        await js.add_stream(name=STREAM_NAME, subjects=[RAW_SUBJECT, ENRICHED_SUBJECT])
-        print(f"Stream '{STREAM_NAME}' created")
-
 async def main():
-    nc = await nats.connect(nats_url)
-    js = nc.jetstream()
+    js = await create_js(nats_url)
     await ensure_stream(js)
 
     rss_arr = [
@@ -122,6 +117,7 @@ async def main():
     ]
     scraper = RssScraper(rss_arr, js, poll_interval=300)  # 5 min polling
     await scraper.run_continuously()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

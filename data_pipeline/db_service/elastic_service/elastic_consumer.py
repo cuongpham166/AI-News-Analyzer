@@ -30,7 +30,7 @@ class ElasticConsumer:
             await msg.ack()
         except Exception as e:
             print(f"Error processing ai article: {e}")
-            await msg.term()
+            await msg.nak()
 
     async def run(self):
         sub = await self.js.subscribe(

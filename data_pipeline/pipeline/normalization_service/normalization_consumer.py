@@ -1,18 +1,15 @@
-import os
+
 import asyncio
 import json
-from dotenv import load_dotenv
+
 
 from data_pipeline.nats.client import create_js
 from data_pipeline.nats.streams import ensure_stream, RAW_SUBJECT, ENRICHED_SUBJECT
-from data_pipeline.processing_service.raw_data_processor import RawDataProcessor
+from data_pipeline.pipeline.normalization_service.normalization_processor import NormalizationProcessor
 from data_pipeline.responses.processed_data_response import ProcessedDataResponse
 
-load_dotenv()
-nats_url = os.getenv("NATS_URL")
 
-
-class RawDataConsumer:
+class NormalizationConsumer:
     def __init__(self, js, processor):
         self.js = js
         self.processor = processor
@@ -35,7 +32,7 @@ class RawDataConsumer:
     async def run(self):
         sub = await self.js.subscribe(
             RAW_SUBJECT,
-            durable="raw-articles-consumer",
+            durable="normalization-consumer",
             deliver_policy="all",
             ack_wait=30,
             max_deliver=5,
@@ -49,10 +46,10 @@ class RawDataConsumer:
 
 
 async def main():
-    js = await create_js(nats_url)
+    js = await create_js()
     await ensure_stream(js)
 
-    processor = RawDataProcessor()
-    consumer = RawDataConsumer(js, processor)
+    processor = NormalizationProcessor()
+    consumer = NormalizationConsumer(js, processor)
 
     await consumer.run()

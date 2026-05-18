@@ -9,7 +9,7 @@ import json
 import asyncio
 
 
-class RawDataProcessor:
+class NormalizationProcessor:
     def __init__(self):
         self.enriched_links = set()
 

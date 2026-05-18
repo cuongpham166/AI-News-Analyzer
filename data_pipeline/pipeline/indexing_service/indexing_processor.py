@@ -1,18 +1,11 @@
 from elasticsearch import Elasticsearch, exceptions, helpers
 from datetime import datetime, timezone
 
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
-elastic_url = os.getenv("ELASTIC_URL")
-elastic_script_path = os.getenv("ELASTIC_SCRIPT_PATH")
-root_folder = elastic_script_path
-
-
-class ElasticProcessor:
-    def __init__(self):
-        self.es_client = Elasticsearch(elastic_url)
+class IndexingProcessor:
+    def __init__(self,elastic_config=None):
+        self.elastic_config = elastic_config
+        self.es_client = Elasticsearch(self.elastic_config.elastic_url)
 
     def check_connection(self):
         print("Check connection: ", self.es_client.info())
@@ -26,7 +19,7 @@ class ElasticProcessor:
 
     def create_news_index(self):
         index_name = "news"
-        elastic_file = root_folder + "news_mappings.json"
+        elastic_file = self.elastic_config.root_folder + "news_mappings.json"
         with open(elastic_file, "r") as f:
             news_mapping = f.read()
             self.create_index(index_name, news_mapping)

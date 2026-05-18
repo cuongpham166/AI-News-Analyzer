@@ -1,18 +1,14 @@
 import json
-import os
+
 import asyncio
-from dotenv import load_dotenv
 
 from data_pipeline.nats.client import create_js
 from data_pipeline.nats.streams import ensure_stream, RAW_SUBJECT
 from data_pipeline.responses.raw_data_response import RawDataResponse
-from data_pipeline.ingestion_service.raw_data_scraper import RawDataScraper
+from data_pipeline.pipeline.ingestion_service.ingestion_processor import IngestionProcessor
+from data_pipeline.config.ingestion_config import get_rss_urls
 
-load_dotenv()
-nats_url = os.getenv("NATS_URL")
-
-
-class RawDataProducer:
+class IngestionProducer:
     def __init__(self, js=None, scraper=None, poll_interval=300):
         self.js = js
         self.poll_interval = poll_interval
@@ -46,11 +42,11 @@ class RawDataProducer:
 
 
 async def main():
-    rss_urls = ["https://news.un.org/feed/subscribe/en/news/all/rss.xml"]
-    js = await create_js(nats_url)
+    rss_urls = get_rss_urls()
+    js = await create_js()
     await ensure_stream(js)
-    scraper = RawDataScraper(rss_urls)
-    raw_data_producer = RawDataProducer(js, scraper, poll_interval=300)
+    scraper = IngestionProcessor(rss_urls)
+    raw_data_producer = IngestionProducer(js, scraper, poll_interval=300)
     await raw_data_producer.run()
 
 

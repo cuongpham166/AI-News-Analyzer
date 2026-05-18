@@ -4,11 +4,9 @@ import feedparser
 import asyncio
 import aiohttp
 
-from data_pipeline.ingestion_service.raw_data_producer import RawDataProducer
 from data_pipeline.responses.raw_data_response import RawDataResponse
 
-
-class RawDataScraper:
+class IngestionProcessor:
     def __init__(self, rss_urls):
         self.rss_urls = rss_urls
         self.seen_links = set()

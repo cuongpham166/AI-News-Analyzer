@@ -30,7 +30,6 @@ class SentimentAnalyzer:
         self.sentiment_tokenizer.save(local_dir)
 
     def analyze_input(self, articles: List[str]) -> SentimentResponse:
-        prediction_result = []
         tokenized_inputs = self.sentiment_tokenizer.encode(articles).to(self.device)
 
         """

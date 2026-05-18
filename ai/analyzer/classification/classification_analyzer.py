@@ -27,6 +27,19 @@ class ClassificationAnalyzer:
     def analyze_input(self, articles: List[str]) -> ClassificationResponse:
         labels = ["politics", "economy", "entertainment", "environment",
                   "sports", "technology", "health", "culture"]
+        
+        """
+        labels = [
+            "politics",
+            "economy",
+            "technology",
+            "sports",
+            "health",
+            "entertainment",
+            "science",
+            "world"
+        ]
+        """
 
         all_texts = []
         all_hypotheses = []

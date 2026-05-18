@@ -6,36 +6,18 @@ import nats
 from datetime import datetime, timezone
 import tldextract
 
-from data_pipeline.db_service.postgres_service.postgres_processor import PostgresProcessor
+from data_pipeline.pipeline.article_service.article_processor import ArticleProcessor
 
-import os
-from dotenv import load_dotenv
 from data_pipeline.nats.client import create_js
 from data_pipeline.nats.streams import ensure_stream, ENRICHED_SUBJECT, AI_SUBJECT
-
-load_dotenv()
-nats_url = os.getenv("NATS_URL")
-
-postgres_host = os.getenv("POSTGRES_HOST")
-postgres_port = os.getenv("POSTGRES_PORT")
-postgres_dbname = os.getenv("POSTGRES_DBNAME")
-postgres_user = os.getenv("POSTGRES_USER")
-postgres_password = os.getenv("POSTGRES_PASSWORD")
-
-conn_params = {
-    "host": postgres_host,
-    "port": postgres_port,
-    "dbname": postgres_dbname,
-    "user": postgres_user,
-    "password": postgres_password
-}
+from data_pipeline.config.article_config import get_postgres_config
 
 
-class PostgresConsumer:
-    def __init__(self, js=None, conn_params=conn_params):
+class ArticleConsumer:
+    def __init__(self, js=None, conn_params=None):
         self.js = js
         self.conn_params = conn_params
-        self.db_processor = PostgresProcessor(self.conn_params)
+        self.db_processor = ArticleProcessor(self.conn_params)
         self.db_processor.connect()
 
     def check_connection(self):
@@ -112,9 +94,10 @@ class PostgresConsumer:
 
 
 async def main():
-    js = await create_js(nats_url)
+    js = await create_js()
     await ensure_stream(js)
-    postgres_consumer = PostgresConsumer(js, conn_params)
+    conn_params = get_postgres_config()
+    postgres_consumer = ArticleConsumer(js, conn_params)
     await asyncio.gather(
         postgres_consumer.retrieve_enriched_articles(),
         postgres_consumer.retrieve_ai_articles(),

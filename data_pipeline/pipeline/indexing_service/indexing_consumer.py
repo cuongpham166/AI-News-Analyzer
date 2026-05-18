@@ -3,22 +3,17 @@ import asyncio
 from nats.aio.client import Client as NATS
 import nats
 from datetime import datetime, timezone
-from data_pipeline.db_service.elastic_service.elastic_processor import ElasticProcessor
+from data_pipeline.pipeline.indexing_service.indexing_processor import IndexingProcessor
 
-import os
-from dotenv import load_dotenv
 
 from data_pipeline.nats.client import create_js
 from data_pipeline.nats.streams import ensure_stream, ENRICHED_SUBJECT, AI_SUBJECT, SAVED_SUBJECT
+from data_pipeline.config.indexing_config import get_elasticsearch_config
 
-load_dotenv()
-nats_url = os.getenv("NATS_URL")
-
-
-class ElasticConsumer:
-    def __init__(self, js=None):
+class IndexingConsumer:
+    def __init__(self, js=None, elastic_config=None):
         self.js = js
-        self.elastic_processor = ElasticProcessor()
+        self.elastic_processor = IndexingProcessor(elastic_config)
 
     async def process_ai_message(self, msg):
         ai_ariticle = json.loads(msg.data.decode())
@@ -35,7 +30,7 @@ class ElasticConsumer:
     async def run(self):
         sub = await self.js.subscribe(
             AI_SUBJECT,
-            durable="ai-articles-consumer-elastic",
+            durable="indexing-consumer",
             deliver_policy="all",
             manual_ack=True
         )
@@ -45,9 +40,10 @@ class ElasticConsumer:
 
 
 async def main():
-    js = await create_js(nats_url)
+    js = await create_js()
     await ensure_stream(js)
-    elastic_consumer = ElasticConsumer(js)
+    elastic_config = get_elasticsearch_config()
+    elastic_consumer = IndexingConsumer(js,elastic_config)
     await elastic_consumer.run()
 
 

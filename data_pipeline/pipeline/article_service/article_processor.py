@@ -9,7 +9,7 @@ query_folder_path = os.getenv("SQL_QUERY_FOLDER_PATH")
 root_folder = query_folder_path
 
 
-class PostgresProcessor:
+class ArticleProcessor:
     def __init__(self, config):
         self.config = config
         self.conn = None

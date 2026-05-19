@@ -1,0 +1,11 @@
+.vscode
+venv
+.env
+.idea
+
+#AI Module
+ai/models
+ai/dataset
+
+#Backend Module
+backend/.env

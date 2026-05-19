@@ -1,4 +1,4 @@
-# AI News Analyzer
+# AI News Analyzer (This is the broken Repo. Please visit new repo: https://github.com/cuongpham166/AI_News_Analyzer)
 
 ## Introduce
 

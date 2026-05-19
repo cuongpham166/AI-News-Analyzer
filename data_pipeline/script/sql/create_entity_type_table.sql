@@ -1,4 +1,0 @@
-CREATE TABLE IF NOT EXISTS entity_type (
-    id SERIAL PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL
-);

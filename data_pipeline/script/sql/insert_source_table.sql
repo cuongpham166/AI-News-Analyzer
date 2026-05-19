@@ -1,3 +1,0 @@
-INSERT INTO source (name)
-VALUES (%s) 
-ON CONFLICT (name) DO NOTHING;

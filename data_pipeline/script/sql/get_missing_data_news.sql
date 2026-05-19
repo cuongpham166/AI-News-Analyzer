@@ -1,1 +1,0 @@
-Select title, publish_date, link, lang, full_text from news where summary is null;

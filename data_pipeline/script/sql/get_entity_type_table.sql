@@ -1,1 +1,0 @@
-SELECT * FROM entity_type;

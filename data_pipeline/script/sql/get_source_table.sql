@@ -1,1 +1,0 @@
-SELECT * FROM news_source;

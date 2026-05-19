@@ -1,3 +1,0 @@
-INSERT INTO topic (name)
-VALUES (%s) 
-ON CONFLICT (name) DO NOTHING;
